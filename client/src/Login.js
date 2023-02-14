@@ -28,26 +28,34 @@ const theme = createTheme({
         },
     },
     typography: {
-        fontFamily: "book antiqua",
+        fontFamily: "Bookman Old Style",
     },
 });
 
 const imagestyle = {
-    position: 'relative',
-    bottom: '250px',
-    left: '770px',
+    position: 'absolute',
+    top: '10px',
+    right: '-160px',
 };
 
 export default function Login() {
     const classes = useStyles();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(`Username: ${username}, Password: ${password}`);
-        // You would typically make a network call here to authenticate the user
-    };
+        const buttonName = event.nativeEvent.submitter.name;
+        if (buttonName === "admin-button" && username === "admin" && password === "admin123") {
+            // If the input matches the admin credentials, redirect to the admin page
+        }
+        else if (buttonName === "default-button") {
+            // Redirect to the default page
+        } else {
+            setError("This account does not have admin privileges");
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -83,8 +91,12 @@ export default function Login() {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                             />
+                            <Typography>
+                                {error}
+                            </Typography>
                             <Button
                                 type="submit"
+                                name="default-button"
                                 fullWidth
                                 variant="contained"
                                 color="primary"
@@ -92,10 +104,21 @@ export default function Login() {
                             >
                                 Sign In
                             </Button>
+                            <Button
+                                type="submit"
+                                name="admin-button"
+                                fullWidth
+                                variant="contained"
+                                color="secondary"
+                                className={classes.submit}
+                                style={{ color: "#2f5f2e" }}
+                            >
+                                Sign In As Admin
+                            </Button>
                         </form>
                     </Box>
+                    <img src={image} alt="ReadRater Logo" style={imagestyle} />
                 </Container>
-                <img src={image} alt="ReadRater Logo" style={imagestyle} />
             </div>
         </ThemeProvider>
     );
