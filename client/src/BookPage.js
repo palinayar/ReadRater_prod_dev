@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Book from './Book.js'
+import { Icon } from '@mui/material';
+import bookIcon from "./images/book-icon.png"
 
 
 
@@ -32,24 +34,24 @@ function Copyright() {
 }
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const subtext = {
-  fontSize:"10px"
-}
-const ratingStyle = {
-  fontSize:"16px",
-  fontWeight: "bold",
-  textAlign: "right"
-}
-export default function AddBook() {
+
+const appBarHeight = "70px"
+
+export default function BookPage() {
   return (
     <>
       <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <CameraIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Recently rated books
+      <AppBar position="relative" style={{height:appBarHeight}}> {/* #TODO Må bytte til grønn farge i header */}
+        <Toolbar style ={{display:"flex"}}>
+          <img src = {bookIcon} style={{height:appBarHeight, position:"relative", marginRight:"20px"}}/>
+          <Typography style={{fontFamily:"futura, sans-serif"}} variant="h6" color="inherit" noWrap>
+            ReadRater
           </Typography>
+          <Box style={{flexGrow:"1"}}>
+          </Box>
+          <Button variant = "contained" >
+          Login 
+          </Button> {/* #TODO Link til login-side */}
         </Toolbar>
       </AppBar>
       <main>
@@ -57,43 +59,32 @@ export default function AddBook() {
         <Box
           sx={{
             bgcolor: 'background.paper',
-            pt: 8,
-            pb: 6,
+            pt: 6,
+            pb: 0,
           }}
         >
-          <Container maxWidth="sm">
-            <Typography
+          <Container style ={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+            <Typography style={{marginBottom:"30px"}}
               component="h1"
               variant="h2"
               align="center"
               color="text.primary"
               gutterBottom
             >
-              Recently rated books
+              Welcome to ReadRater!
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Welcome to ReadRater Hub! Here you will find a collection of books that have been rated 
-              by our professional reviewers. Take a look!
-            </Typography>
-            <Stack
-              sx={{ pt: 4 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              <Button variant="contained">Main call to action</Button>
-              <Button variant="outlined">Secondary action</Button>
-            </Stack>
+            <Button variant = "outlined" style={{display:"inline-block", width:"150px"}}>
+              Add book
+            </Button> {/*#TODO Hvis bruker er logget inn: link til addbook-side. Om nei, til login-side */}
           </Container>
         </Box>
-        <Container sx={{ py: 8 }} maxWidth="md">
+        <Container sx={{ py: 4 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
             {cards.map((card) => (
-              <Grid item key={card} xs={10} sm={4} md={2}>
-                <Book title = "Harry Potter" author = "J.K.Rowling" year = "2005" genre = "Fantacy" picture="https://source.unsplash.com/random">
-
-                </Book>
+              <Grid item key={card} xs={10} sm={4} md={3}>
+                <Book title = "Harry Potter" author = "J.K.Rowling" year = "2005" genre = "Fantacy" picture="http://prodimage.images-bn.com/pimages/9780545139700_p0_v5_s1200x630.jpg">
+                </Book> {/* #TODO Her kom å legge til infoen fra hver bok */}
               </Grid>
             ))}
           </Grid>
