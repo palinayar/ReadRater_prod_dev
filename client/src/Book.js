@@ -14,6 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
+import Rating from "@mui/material/Rating";
 
 
 const ratingStyle = {
@@ -24,7 +25,20 @@ const ratingStyle = {
 };
 let ratingValue = 4; //#TODO Her må det legges inn en utregning av ratingen til hver bok
 
+var click = 0;
+
 export default function Book({ title, author, year, genre, picture }) {
+  var [activeClick, setActiveClick] = React.useState(click);
+  const [value, setValue] = React.useState(2);
+
+  const handleClicked = () => {
+    if (activeClick === 0) {
+      setActiveClick(activeClick + 1);
+    } else {
+      setActiveClick(activeClick - 1);
+    }
+  };
+
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Box style={{}}>
@@ -55,10 +69,27 @@ export default function Book({ title, author, year, genre, picture }) {
         </Typography>
         <Typography style={{ fontWeight: "300" }}>{genre}</Typography>
       </CardContent>
-      <CardActions style={{ display: "flex" }}>
-        <Button size="small" variant="text" color="success" style={{color:"#2F5F2E"}}>Rate</Button>
+      <CardActions style={{ display: "flex", flexWrap: "wrap" }}>
+        <Button size="small" variant="text" color="success" style={{color:"#2F5F2E"}} onClick={handleClicked}>
+          Rate
+        </Button>
         <Box style={{ flexGrow: "1" }}></Box>
         <Box style={ratingStyle}>{ratingValue}/10 ★</Box>
+        <Grid style={{ alignSelf: "center" }}>
+          {activeClick === 1 ? (
+            <Grid>
+              <Rating
+                name="simple-controlled"
+                value={value}             //Denne verdien må huskes per bruker
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+              />
+            </Grid>
+          ) : (
+            <Grid></Grid>
+          )}
+        </Grid>
       </CardActions>
     </Card>
   );
