@@ -16,7 +16,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Book from './Book.js'
 import { Icon } from '@mui/material';
-import bookIcon from "./images/book-icon.png"
+import bookIconW from "./images/book-icon_white.png"
 
 
 
@@ -24,7 +24,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="#">
         ReadRater
       </Link>{' '}
       {new Date().getFullYear()}
@@ -41,16 +41,23 @@ export default function BookPage() {
   return (
     <>
       <CssBaseline />
-      <AppBar position="relative" style={{height:appBarHeight}}> {/* #TODO Må bytte til grønn farge i header */}
+      <AppBar position="relative" style={{height:appBarHeight, backgroundColor:"#2F5F2E"}}>
         <Toolbar style ={{display:"flex"}}>
-          <img src = {bookIcon} style={{height:appBarHeight, position:"relative", marginRight:"20px"}}/>
-          <Typography style={{fontFamily:"futura, sans-serif"}} variant="h6" color="inherit" noWrap>
+          <Box style={{height:appBarHeight, width:appBarHeight, display:"flex", alignContent:"center", justifyContent:"center"}}>
+            <img src = {bookIconW} 
+              style={{
+                height:appBarHeight, 
+                position:"relative",  
+                boxSizing:"borderbox",
+                padding: "10px" 
+            }}/>
+          </Box>
+          <Typography style={{fontFamily:"futura, helvetica, arial, sans-serif", fontSize:"26px", }} variant="h6" color="inherit" noWrap>
             ReadRater
           </Typography>
-          <Box style={{flexGrow:"1"}}>
-          </Box>
-          <Button variant = "contained" >
-          Login 
+          <Box style={{flexGrow:"1"}}></Box>
+          <Button variant="contained" color="success" style={{BackgroundColor:"#2F5F2E"}}>
+            Login 
           </Button> {/* #TODO Link til login-side */}
         </Toolbar>
       </AppBar>
@@ -73,7 +80,7 @@ export default function BookPage() {
             >
               Welcome to ReadRater!
             </Typography>
-            <Button variant = "outlined" style={{display:"inline-block", width:"150px"}}>
+            <Button variant="outlined" color="success" style={{display:"inline-block", width:"150px", color:"#2F5F2E", borderColor:"#2F5F2E"}}>
               Add book
             </Button> {/*#TODO Hvis bruker er logget inn: link til addbook-side. Om nei, til login-side */}
           </Container>
@@ -93,7 +100,7 @@ export default function BookPage() {
       {/* Footer */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
-          Footer
+          
         </Typography>
         <Typography
           variant="subtitle1"

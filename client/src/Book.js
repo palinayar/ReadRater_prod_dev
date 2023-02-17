@@ -15,9 +15,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 
-const subtext = {
-  fontSize: "10px",
-};
+
 const ratingStyle = {
   fontSize: "16px",
   fontWeight: "bold",
@@ -29,22 +27,25 @@ let ratingValue = 4; //#TODO Her må det legges inn en utregning av ratingen til
 export default function Book({ title, author, year, genre, picture }) {
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <CardMedia
-        component="img"
-        sx={{
-          // 16:9
-          pt: "10%",
-          aspectRatio: "3/2" /* #TODO Lage begrensninger for bilder */,
-        }}
-        image={picture}
-        alt="random"
-      />
-      <CardContent sx={{ flexGrow: 1 }}>
+      <Box style={{}}>
+        <CardMedia
+          component="img"
+          sx={{
+
+            width:"100%",
+            height:"100%",
+            aspectRatio:"2/3",
+          }}
+          image={picture}
+          alt="Book Image"
+        />
+      </Box>
+      <CardContent sx={{ flexGrow: 1, py:"0px"}}>
         <Typography
           gutterBottom
           variant="h6"
           component="h5"
-          style={{ lineHeight: "1.25em" }}
+          style={{ lineHeight: "1.25em", marginTop:".5em", marginBottom:".5em" }}
         >
           {title}
         </Typography>
@@ -55,7 +56,7 @@ export default function Book({ title, author, year, genre, picture }) {
         <Typography style={{ fontWeight: "300" }}>{genre}</Typography>
       </CardContent>
       <CardActions style={{ display: "flex" }}>
-        <Button size="small">Rate</Button>
+        <Button size="small" variant="text" color="success" style={{color:"#2F5F2E"}}>Rate</Button>
         <Box style={{ flexGrow: "1" }}></Box>
         <Box style={ratingStyle}>{ratingValue}/10 ★</Box>
       </CardActions>
