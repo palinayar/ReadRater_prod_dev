@@ -8,9 +8,9 @@ app.use(cors());
 const mysql = require("mysql2");
 let connection = mysql.createConnection({
   host: "mysql.stud.ntnu.no",
-  user: "username",
-  password: "password",
-  database: "database_name",
+  user: "thomaeni_pu",
+  password: "123",
+  database: "thomaeni_pu_dev",
 });
 
 connection.connect(function (err) {
@@ -25,27 +25,25 @@ app.listen(port, () => {
 });
 
 class ReadRaterService {
-  books = [
-    { bok_id: 1, title: "Tittel på bok 1", genre: "comedy" },
-    { bok_id: 2, title: "Tittel på bok 2", genre: "novel" },
-    { bok_id: 3, title: "Tittel på bok 3", genre: "crime" },
-  ];
-
   //utgangspunkt for databasekall
   getAllBooks() {
-    return new Promise((resolve, _reject) => {
-      connection.query("SELECT * FROM company", (error, results) => {
-        if (error) return reject(error);
+    return new Promise((resolve, reject) => {
+      //henter ut id, tittel, sjanger og navn på forfatter
+      connection.query(
+        "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Forfatter.navn FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id",
+        (error, results) => {
+          if (error) return reject(error);
 
-        resolve(results);
-      });
+          resolve(results);
+        }
+      );
     });
   }
 }
 
 const readRaterService = new ReadRaterService();
 
-//router
+//API router 
 app.get("/api/books", (_request, response) => {
   readRaterService
     .getAllBooks()
@@ -53,7 +51,7 @@ app.get("/api/books", (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
-//This is how you fetch the data from the database
+//This is how you fetch the data from the database, use in components
 // useEffect(() => {
 //   readService
 //     .getAllBooks()
