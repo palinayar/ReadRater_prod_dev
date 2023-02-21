@@ -4,7 +4,7 @@ const cors = require("cors");
 
 app.use(cors());
 
-//Database setup
+//Database connection setup
 const mysql = require("mysql2");
 let connection = mysql.createConnection({
   host: "mysql.stud.ntnu.no",
@@ -15,7 +15,7 @@ let connection = mysql.createConnection({
 
 connection.connect(function (err) {
   if (err) throw err;
-  console.log("Connected!");
+  console.log("Connected to mySQL host!");
 });
 
 //Server running on port 5000, react app on port 3000
@@ -43,7 +43,7 @@ class ReadRaterService {
 
 const readRaterService = new ReadRaterService();
 
-//API router 
+//API router
 app.get("/api/books", (_request, response) => {
   readRaterService
     .getAllBooks()

@@ -7,7 +7,8 @@ CREATE TABLE Forfatter (
 CREATE TABLE Bok ( 
     bok_id int NOT NULL AUTO_INCREMENT, 
     tittel varchar(255) NOT NULL, 
-    sjanger varchar(255) NOT NULL, 
+    sjanger varchar(255) NOT NULL,
+    bilde varchar(255),  
     forfatter_id int NOT NULL, 
     PRIMARY KEY (bok_id), 
     FOREIGN KEY (forfatter_id) 
