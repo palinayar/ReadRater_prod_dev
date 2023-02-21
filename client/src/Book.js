@@ -17,18 +17,24 @@ const ratingStyle = {
   textAlign: "right",
   paddingRight: "5px",
 };
-let ratingValue = 2; //#TODO Her må det legges inn en utregning av ratingen til hver bok
 
 var click = 0;
 
-export default function Book({ title, author, year, genre, picture }) {
+export default function Book({
+  title,
+  author,
+  year,
+  genre,
+  picture,
+  avg_rating,
+}) {
   var [activeClick, setActiveClick] = React.useState(click);
-  const [value, setValue] = React.useState(ratingValue); // Her må value være gjennomsnittlig rating hentet fra backend
+  const [value, setValue] = React.useState(avg_rating); // Her må value være gjennomsnittlig rating hentet fra backend
 
   const handleClicked = () => {
     if (activeClick === 0) {
       setActiveClick(click + 1);
-      setValue(ratingValue);
+      setValue(avg_rating);
     } else {
       setActiveClick(click - 1);
     }
@@ -39,7 +45,7 @@ export default function Book({ title, author, year, genre, picture }) {
       <Box style={{}}>
         <CardMedia
           component="img"
-          sx={{
+          style={{
             width: "100%",
             height: "100%",
             aspectRatio: "2/3",
@@ -73,6 +79,7 @@ export default function Book({ title, author, year, genre, picture }) {
         <Grid style={{ alignSelf: "center" }}>
           <Grid style={{ paddingTop: 5 }}>
             <Rating
+              readOnly
               name="simple-controlled"
               value={value} //Denne verdien må huskes per bruker
               onChange={(event, newValue) => {

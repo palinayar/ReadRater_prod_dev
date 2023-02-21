@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Button,
@@ -19,6 +19,7 @@ import {
   NavLink,
   Routes,
 } from "react-router-dom";
+import readService from "./service.js";
 
 function Copyright() {
   return (
@@ -38,6 +39,20 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const appBarHeight = "70px";
 
 export default function BookPage() {
+  const [books, setBooks] = useState([]);
+  // const [rating, setRating] = useState();
+  //This is how you fetch the data from the database, use in components
+  useEffect(() => {
+    readService
+      .getAllBooks()
+      .then((data) => {
+        setBooks(data);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, []);
+
   const navigate = useNavigate();
   return (
     <>
@@ -133,15 +148,16 @@ export default function BookPage() {
         <Container sx={{ py: 4 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={10} sm={4} md={3}>
+            {books.map((book) => (
+              <Grid item key={book.bok_id} xs={10} sm={4} md={3}>
                 <Book
-                  title="Harry Potter"
-                  author="J.K.Rowling"
-                  year="2005"
-                  genre="Fantacy"
-                  picture="http://prodimage.images-bn.com/pimages/9780545139700_p0_v5_s1200x630.jpg"
-                ></Book>{" "}
+                  title={book.tittel}
+                  author={book.navn}
+                  year={book.aar}
+                  genre={book.sjanger}
+                  picture={book.bilde}
+                  avg_rating={book.avg_verdi}
+                ></Book>
                 {/* #TODO Her kom å legge til infoen fra hver bok */}
               </Grid>
             ))}
