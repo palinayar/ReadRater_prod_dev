@@ -41,6 +41,12 @@ class ReadRaterService {
       );
     });
   }
+  addRating(rating_value, bruker_id, bok_id, vurdering) {}
+  //prøve put i stedet slik at man kun trenger en funksjon
+
+  addBook() {}
+
+  logIn(brukernavn, passord) {}
 }
 
 const readRaterService = new ReadRaterService();
