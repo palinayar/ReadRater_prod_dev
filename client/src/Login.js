@@ -1,35 +1,39 @@
 import React, { useState } from "react";
-import { ThemeProvider, createTheme, makeStyles } from "@material-ui/core/styles";
 import {
-    TextField,
-    Button,
-    Box,
-    Typography,
-    Container
+  ThemeProvider,
+  createTheme,
+  makeStyles,
+} from "@material-ui/core/styles";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Container,
 } from "@material-ui/core";
 import image from "./images/book-icon.png";
 
-const useStyles = makeStyles(theme => ({
-    form: {
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
+const useStyles = makeStyles((theme) => ({
+  form: {
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 const theme = createTheme({
-    palette: {
-        primary: {
-            main: "#2f5f2e",
-        },
-        secondary: {
-            main: "#ffffff",
-        },
+  palette: {
+    primary: {
+      main: "#2f5f2e",
     },
     typography: {
         fontFamily: "Bookman Old Style",
     },
+  },
+  typography: {
+    fontFamily: "book antiqua",
+  },
 });
 
 const imagestyle = {
