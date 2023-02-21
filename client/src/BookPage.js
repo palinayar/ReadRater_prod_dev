@@ -16,7 +16,9 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Book from './Book.js'
 import { Icon } from '@mui/material';
-import bookIconW from "./images/book-icon_white.png"
+import bookIconW from "./images/book-icon_white.png";
+import {useNavigate} from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink, Routes } from 'react-router-dom';
 
 
 
@@ -38,6 +40,7 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const appBarHeight = "70px"
 
 export default function BookPage() {
+  const navigate = useNavigate()
   return (
     <>
       <CssBaseline />
@@ -56,9 +59,13 @@ export default function BookPage() {
             ReadRater
           </Typography>
           <Box style={{flexGrow:"1"}}></Box>
-          <Button variant="contained" color="success" style={{BackgroundColor:"#2F5F2E"}}>
+          <Button 
+            variant="contained" 
+            color="success" 
+            style={{BackgroundColor:"#2F5F2E"}}
+            onClick={() => navigate("login")}>
             Login 
-          </Button> {/* #TODO Link til login-side */}
+          </Button> 
         </Toolbar>
       </AppBar>
       <main>
@@ -80,7 +87,11 @@ export default function BookPage() {
             >
               Welcome to ReadRater!
             </Typography>
-            <Button variant="outlined" color="success" style={{display:"inline-block", width:"150px", color:"#2F5F2E", borderColor:"#2F5F2E"}}>
+            <Button 
+            variant="outlined" 
+            color="success" 
+            style={{display:"inline-block", width:"150px", color:"#2F5F2E", borderColor:"#2F5F2E"}}
+            onClick={() => navigate("add-new-book")}>
               Add book
             </Button> {/*#TODO Hvis bruker er logget inn: link til addbook-side. Om nei, til login-side */}
           </Container>
