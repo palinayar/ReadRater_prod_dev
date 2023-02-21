@@ -1,23 +1,15 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
-import CameraIcon from "@mui/icons-material/PhotoCamera";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
-import Rating from "@mui/material/Rating";
-import Alert from '@mui/material/Alert';
-
-
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Box,
+  Typography,
+} from "@material-ui/core";
+import { Rating, Alert } from "@mui/material";
 
 const ratingStyle = {
   fontSize: "16px",
@@ -31,15 +23,14 @@ var click = 0;
 
 export default function Book({ title, author, year, genre, picture }) {
   var [activeClick, setActiveClick] = React.useState(click);
-  const [value, setValue] = React.useState(ratingValue);  // Her må value være gjennomsnittlig rating hentet fra backend
+  const [value, setValue] = React.useState(ratingValue); // Her må value være gjennomsnittlig rating hentet fra backend
 
   const handleClicked = () => {
-    if (activeClick === 0){
-      setActiveClick(click + 1)
-      setValue(ratingValue)
-    }
-    else{
-      setActiveClick(click - 1)
+    if (activeClick === 0) {
+      setActiveClick(click + 1);
+      setValue(ratingValue);
+    } else {
+      setActiveClick(click - 1);
     }
   };
 
@@ -49,21 +40,24 @@ export default function Book({ title, author, year, genre, picture }) {
         <CardMedia
           component="img"
           sx={{
-
-            width:"100%",
-            height:"100%",
-            aspectRatio:"2/3",
+            width: "100%",
+            height: "100%",
+            aspectRatio: "2/3",
           }}
           image={picture}
           alt="Book Image"
         />
       </Box>
-      <CardContent sx={{ flexGrow: 1, py:"0px"}}>
+      <CardContent sx={{ flexGrow: 1, py: "0px" }}>
         <Typography
           gutterBottom
           variant="h6"
           component="h5"
-          style={{ lineHeight: "1.25em", marginTop:".5em", marginBottom:".5em" }}
+          style={{
+            lineHeight: "1.25em",
+            marginTop: ".5em",
+            marginBottom: ".5em",
+          }}
         >
           {title}
         </Typography>
@@ -77,32 +71,29 @@ export default function Book({ title, author, year, genre, picture }) {
         <Box style={{ flexGrow: "1" }}></Box>
         {/* <Box style={ratingStyle}>{ratingValue}/10 ★</Box> */}
         <Grid style={{ alignSelf: "center" }}>
-            <Grid style={{paddingTop: 5}}>
-              <Rating
-                name="simple-controlled"
-                value={value}             //Denne verdien må huskes per bruker
-                onChange={(event, newValue) => {
-                  setValue(newValue);
-                }}
-              />
-            </Grid>
+          <Grid style={{ paddingTop: 5 }}>
+            <Rating
+              name="simple-controlled"
+              value={value} //Denne verdien må huskes per bruker
+              onChange={(event, newValue) => {
+                setValue(newValue);
+              }}
+            />
+          </Grid>
         </Grid>
         <Grid>
-          <Button 
-            size="small" 
-            variant="text" 
-            color="success" 
-            style={{color:"#2F5F2E"}} 
-            onClick={handleClicked}>
-              {activeClick === 1 ? (
-                "ok"
-              ):(
-                "Rate"
-              )}
+          <Button
+            size="small"
+            variant="text"
+            color="success"
+            style={{ color: "#2F5F2E" }}
+            onClick={handleClicked}
+          >
+            {activeClick === 1 ? "ok" : "Rate"}
           </Button>
           {activeClick === 1 ? (
             <Alert severity="success">Thanks for rating this book!</Alert>
-          ):(
+          ) : (
             <Grid></Grid>
           )}
         </Grid>
