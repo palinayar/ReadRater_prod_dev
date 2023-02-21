@@ -1,0 +1,43 @@
+CREATE TABLE Forfatter (
+    forfatter_id int NOT NULL AUTO_INCREMENT,
+    navn varchar(255) NOT NULL,
+    PRIMARY KEY (forfatter_id)
+);
+
+CREATE TABLE Bok ( 
+    bok_id int NOT NULL AUTO_INCREMENT, 
+    tittel varchar(255) NOT NULL, 
+    sjanger varchar(255) NOT NULL,
+    bilde varchar(255),  
+    forfatter_id int NOT NULL, 
+    PRIMARY KEY (bok_id), 
+    FOREIGN KEY (forfatter_id) 
+    REFERENCES Forfatter(forfatter_id) 
+);
+
+CREATE TABLE Bruker (
+    bruker_id int NOT NULL AUTO_INCREMENT,
+    brukernavn varchar(255) NOT NULL,
+    passord varchar(255) NOT NULL,
+    PRIMARY KEY (bruker_id)
+);
+
+CREATE TABLE Rangering ( 
+    rangering_id int NOT NULL AUTO_INCREMENT, 
+    verdi int NOT NULL, 
+    bok_id int NOT NULL, 
+    bruker_id int NOT NULL, 
+    PRIMARY KEY (rangering_id), 
+    FOREIGN KEY (bok_id) REFERENCES Bok(bok_id),
+    FOREIGN KEY (bruker_id) REFERENCES Bruker(bruker_id)
+);
+
+Link for database: 
+https://mysqladmin.it.ntnu.no/index.php 
+Logg inn på feide med egen bruker 
+Logg inn på php med brukernavn: thomaeni_pu og passord:123
+
+
+INSERT INTO: 
+INSERT INTO Forfatter (navn) VALUES ('Marcel Proust'), ('James Joyce'), ('Miguel de Cervantes')
+INSERT INTO Bok (tittel, sjanger, forfatter_id) VALUES ('In Search of Lost Time', 'Fiction', 1), ('Ulysses', 'Fiction' , 2), ('Don Quixote', 'Fiction', 3)
