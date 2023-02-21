@@ -80,6 +80,7 @@ export default function Book({
           <Grid style={{ paddingTop: 5 }}>
             <Rating
               readOnly
+              precision={0.1}
               name="simple-controlled"
               value={value} //Denne verdien må huskes per bruker
               onChange={(event, newValue) => {
