@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import Rating from "@mui/material/Rating";
+import Alert from '@mui/material/Alert';
+
 
 
 const ratingStyle = {
@@ -23,20 +25,17 @@ const ratingStyle = {
   textAlign: "right",
   paddingRight: "5px",
 };
-let ratingValue = 4; //#TODO Her må det legges inn en utregning av ratingen til hver bok
+let ratingValue = 2; //#TODO Her må det legges inn en utregning av ratingen til hver bok
 
 var click = 0;
 
 export default function Book({ title, author, year, genre, picture }) {
   var [activeClick, setActiveClick] = React.useState(click);
-  const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(ratingValue);  // Her må value være gjennomsnittlig rating hentet fra backend
 
   const handleClicked = () => {
-    if (activeClick === 0) {
-      setActiveClick(activeClick + 1);
-    } else {
-      setActiveClick(activeClick - 1);
-    }
+    setActiveClick(click + 1)
+    setValue(ratingValue)
   };
 
   return (
@@ -70,14 +69,10 @@ export default function Book({ title, author, year, genre, picture }) {
         <Typography style={{ fontWeight: "300" }}>{genre}</Typography>
       </CardContent>
       <CardActions style={{ display: "flex", flexWrap: "wrap" }}>
-        <Button size="small" variant="text" color="success" style={{color:"#2F5F2E"}} onClick={handleClicked}>
-          Rate
-        </Button>
         <Box style={{ flexGrow: "1" }}></Box>
-        <Box style={ratingStyle}>{ratingValue}/10 ★</Box>
+        {/* <Box style={ratingStyle}>{ratingValue}/10 ★</Box> */}
         <Grid style={{ alignSelf: "center" }}>
-          {activeClick === 1 ? (
-            <Grid>
+            <Grid style={{paddingTop: 5}}>
               <Rating
                 name="simple-controlled"
                 value={value}             //Denne verdien må huskes per bruker
@@ -86,7 +81,19 @@ export default function Book({ title, author, year, genre, picture }) {
                 }}
               />
             </Grid>
-          ) : (
+        </Grid>
+        <Grid>
+          <Button 
+            size="small" 
+            variant="text" 
+            color="success" 
+            style={{color:"#2F5F2E"}} 
+            onClick={handleClicked}>
+              Rate
+          </Button>
+          {activeClick === 1 ? (
+            <Alert severity="success">Thanks for rating this book!</Alert>
+          ):(
             <Grid></Grid>
           )}
         </Grid>
