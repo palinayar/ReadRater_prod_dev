@@ -34,8 +34,13 @@ export default function Book({ title, author, year, genre, picture }) {
   const [value, setValue] = React.useState(ratingValue);  // Her må value være gjennomsnittlig rating hentet fra backend
 
   const handleClicked = () => {
-    setActiveClick(click + 1)
-    setValue(ratingValue)
+    if (activeClick === 0){
+      setActiveClick(click + 1)
+      setValue(ratingValue)
+    }
+    else{
+      setActiveClick(click - 1)
+    }
   };
 
   return (
@@ -89,7 +94,11 @@ export default function Book({ title, author, year, genre, picture }) {
             color="success" 
             style={{color:"#2F5F2E"}} 
             onClick={handleClicked}>
-              Rate
+              {activeClick === 1 ? (
+                "ok"
+              ):(
+                "Rate"
+              )}
           </Button>
           {activeClick === 1 ? (
             <Alert severity="success">Thanks for rating this book!</Alert>
