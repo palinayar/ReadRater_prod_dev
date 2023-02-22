@@ -59,17 +59,44 @@ class ReadRaterService {
 
   addBook() {}
 
-  logIn(brukernavn, passord) {}
+  logIn(brukernavn, passord) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT bruker_id, brukernavn, passord FROM Bruker WHERE brukernavn=? AND passord=?",
+        [brukernavn, passord],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
 }
 
 const readRaterService = new ReadRaterService();
 
 //API router
+// henter alle bøkene inkl. gjennomsnittelig rating
 app.get("/api/books", (_request, response) => {
   readRaterService
     .getAllBooks()
     .then((rows) => response.send(rows))
     .catch((error) => response.status(500).send(error));
+});
+
+// logger inn en bruker med gitt brukernavn og passord
+app.get("/api/log_in/:brukernavn/:passord", (request, response) => {
+  const brukernavn = request.params.brukernavn;
+  const passord = request.params.passord;
+  if (brukernavn.length != 0 && passord.length != 0) {
+    readRaterService
+      .logIn(brukernavn, passord)
+      .then((rows) => response.send(rows))
+      .catch((error) => response.status(500).send(error));
+  } else {
+    response.status(400).send("Missing properties");
+  }
 });
 
 app.post("/api/rating", (request, response) => {
@@ -86,15 +113,3 @@ app.post("/api/rating", (request, response) => {
       .catch((error) => response.status(500).send(error));
   else response.status(400).send("Missing properties");
 });
-
-//This is how you fetch the data from the database, use in components
-// useEffect(() => {
-//   readService
-//     .getAllBooks()
-//     .then((books) => {
-//       console.log(books);
-//     })
-//     .catch((error) => {
-//       console.log(error.message);
-//     });
-// }, []);

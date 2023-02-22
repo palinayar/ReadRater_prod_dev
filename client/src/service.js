@@ -6,6 +6,7 @@ class ReadService {
   getAllBooks() {
     return axios.get("/books").then((response) => response.data);
   }
+
   addRating(verdi, vurdering, bruker_id, bok_id) {
     return axios
       .post("/rating", {
@@ -16,6 +17,12 @@ class ReadService {
       })
       .then((response) => response.data)
       .catch((error) => console.log(error));
+  }
+
+  logIn(brukernavn, passord) {
+    return axios
+      .post("/log_in/" + brukernavn + "/" + passord)
+      .then((response) => response.data);
   }
 }
 
