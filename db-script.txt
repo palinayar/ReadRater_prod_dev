@@ -25,6 +25,7 @@ CREATE TABLE Bruker (
 CREATE TABLE Rangering ( 
     rangering_id int NOT NULL AUTO_INCREMENT, 
     verdi int NOT NULL, 
+    vurdering varchar(255),
     bok_id int NOT NULL, 
     bruker_id int NOT NULL, 
     PRIMARY KEY (rangering_id), 

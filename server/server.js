@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 
 app.use(cors());
+app.use(express.json());
 
 //Database connection setup
 const mysql = require("mysql2");
@@ -41,7 +42,19 @@ class ReadRaterService {
       );
     });
   }
-  addRating(rating_value, bruker_id, bok_id, vurdering) {}
+  addRating(verdi, vurdering, bok_id, bruker_id) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "INSERT INTO Rangering (verdi, vurdering, bok_id, bruker_id) VALUES (?,?,?,?)",
+        [verdi, vurdering, bok_id, bruker_id],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
   //prøve put i stedet slik at man kun trenger en funksjon
 
   addBook() {}
@@ -57,6 +70,21 @@ app.get("/api/books", (_request, response) => {
     .getAllBooks()
     .then((rows) => response.send(rows))
     .catch((error) => response.status(500).send(error));
+});
+
+app.post("/api/rating", (request, response) => {
+  const data = request.body;
+  if (
+    data.hasOwnProperty("verdi") &&
+    data.hasOwnProperty("vurdering") &&
+    data.hasOwnProperty("bruker_id") &&
+    data.hasOwnProperty("bok_id")
+  )
+    readRaterService
+      .addRating(data.verdi, data.vurdering, data.bok_id, data.bruker_id)
+      .then(() => response.send("Rating added"))
+      .catch((error) => response.status(500).send(error));
+  else response.status(400).send("Missing properties");
 });
 
 //This is how you fetch the data from the database, use in components
