@@ -55,9 +55,34 @@ class ReadRaterService {
       );
     });
   }
-  //prøve put i stedet slik at man kun trenger en funksjon
 
-  addBook() {}
+  addBook(tittel, sjanger, bilde, aar, forfatter_id) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "INSERT INTO Bok (tittel, sjanger, bilde, aar, forfatter_id) VALUES (?,?,?,?,?)",
+        [tittel, sjanger, bilde, aar, forfatter_id],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  addAuthor(navn) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "INSERT INTO Forfatter (navn) VALUES (?)",
+        [navn],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results.insertId);
+        }
+      );
+    });
+  }
 
   logIn(brukernavn, passord) {
     return new Promise((resolve, reject) => {
@@ -100,6 +125,7 @@ app.get("/api/log_in/:brukernavn/:passord", (request, response) => {
   }
 });
 
+//legger til rating på en gitt bok med en gitt bruker_id
 app.post("/api/rating", (request, response) => {
   const data = request.body;
   if (
@@ -111,6 +137,28 @@ app.post("/api/rating", (request, response) => {
     readRaterService
       .addRating(data.verdi, data.vurdering, data.bok_id, data.bruker_id)
       .then(() => response.send("Rating added"))
+      .catch((error) => response.status(500).send(error));
+  else response.status(400).send("Missing properties");
+});
+
+//legger til en bok
+app.post("/api/books", (request, response) => {
+  const data = request.body;
+  if (
+    data.hasOwnProperty("navn") &&
+    data.hasOwnProperty("tittel") &&
+    data.hasOwnProperty("sjanger") &&
+    data.hasOwnProperty("bilde") &&
+    data.hasOwnProperty("aar")
+  )
+    readRaterService
+      .addAuthor(data.navn)
+      .then((id) => {
+        readRaterService
+          .addBook(data.tittel, data.sjanger, data.bilde, data.aar, id)
+          .then(() => response.send("Book and author added"))
+          .catch((error) => response.send(error));
+      })
       .catch((error) => response.status(500).send(error));
   else response.status(400).send("Missing properties");
 });
