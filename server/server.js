@@ -66,8 +66,9 @@ class ReadRaterService {
         [brukernavn, passord],
         (error, results) => {
           if (error) return reject(error);
+          if (results.length == 0) return reject("Wrong username or password");
 
-          resolve(results);
+          resolve(results[0]);
         }
       );
     });
