@@ -93,17 +93,18 @@ export default function BookPage() {
               }}
             />
           </Box>
-          <Typography
-            style={{
-              fontFamily: "futura, helvetica, arial, sans-serif",
-              fontSize: "26px",
-            }}
-            variant="h6"
-            color="inherit"
-            noWrap
-          >
-            ReadRater
-          </Typography>
+          <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
+            <Typography
+              style={{
+                fontFamily: "futura, helvetica, arial, sans-serif",
+                fontSize: "26px",
+              }}
+              variant="h6"
+              noWrap
+            >
+              ReadRater
+            </Typography>
+          </a>
           <Box style={{ flexGrow: "1" }}></Box>
           {user ? null : (
             <Button
