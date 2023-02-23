@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useContext } from "react";
 import { ThemeProvider, createTheme, makeStyles } from "@material-ui/core/styles";
 import {
     TextField,
@@ -11,6 +11,8 @@ import bookIcon from "./images/book-icon.png";
 import Book from "./Book.js";
 import { Rating } from "@mui/material";
 import readService from "./service.js";
+import { UserContext } from "./context";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -50,12 +52,19 @@ export default function Login() {
     const [genre, setGenre] = useState("");
     const [picture, setPicture] = useState("");
     const [inpValue, setInpValue] = useState(3);
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(`Title: ${title}, Author: ${author}, Genre: ${genre}`);
-        readService.addBook(author,title,genre,picture,year,inpValue,1)
+        readService.addBook(author,title,genre,picture,year,inpValue,user.bruker_id).then((response) => {
+            navigate("/")
+            console.log(response)
+        }).catch((error) => console.log(error))
         // You would typically make a network call here to authenticate the user
+    };
+    const handleBtnClick = () => {
+        console.log(user)
     };
 
     return (
@@ -148,6 +157,7 @@ export default function Login() {
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
+                                onClick={handleBtnClick}
                             >
                                 Add Book
                             </Button>
