@@ -131,7 +131,7 @@ export default function BookPage() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              paddingTop: 50
+              paddingTop: 50,
             }}
           >
             <Typography

@@ -37,6 +37,7 @@ export default function Book({
   var [rateState, setRateState] = React.useState(0); // 0:= Standard, 1:= Rating form, 2:= Feedback box
   const [value, setValue] = React.useState(avg_rating); // Her må value være gjennomsnittlig rating hentet fra backend
   const [inpValue, setInpValue] = React.useState(3);
+  const [text, setText] = React.useState("");
   const navigate = useNavigate();
 
   const handleClicked = () => {
@@ -58,12 +59,10 @@ export default function Book({
   const handleSubmitRating = () => {
     setRateState(2);
     setValue(inpValue);
-    readService.addRating(
-      inpValue,
-      document.getElementById("textField").value,
-      user.bruker_id,
-      bookID
-    ); // #TODO Logged in user ID value
+    readService
+      .addRating(inpValue, text, user.bruker_id, bookID)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
   };
 
   window.addEventListener("click", function (e) {
@@ -125,7 +124,7 @@ export default function Book({
           <Grid item style={{}}>
             <Button
               size="small"
-              variant={rateEnabled ? ("text") : ("outlined")}
+              variant={rateEnabled ? "text" : "outlined"}
               color="success"
               style={{ color: "#2F5F2E", textAlign: "center" }}
               onClick={handleClicked}
@@ -204,6 +203,7 @@ export default function Book({
                   multiline
                   minRows="8"
                   maxRows="8"
+                  onChange={(event) => setText(event.currentTarget.value)}
                   style={{}}
                 />
                 <Box
@@ -218,7 +218,7 @@ export default function Book({
                     value={inpValue}
                     onChange={(event, newValue) => {
                       if (newValue) {
-                        setInpValue(newValue);
+                        setInpValue(event.currentTarget.value);
                       } /*Not allowed to set value NULL*/
                     }}
                   />

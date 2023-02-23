@@ -33,7 +33,7 @@ class ReadRaterService {
       connection.query(
         "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Bok.bilde, Bok.aar, Forfatter.navn, AVG(Rangering.verdi) as avg_verdi" +
           " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
-          " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id",
+          " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
         (error, results) => {
           if (error) return reject(error);
 
