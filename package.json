@@ -1,0 +1,18 @@
+
+  {
+
+ 
+  
+
+  "scripts": {
+    
+    "//comment": "start method in root lvl, start both nodemon server and client server.",
+
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start"
+
+    
+  }
+  }
+
