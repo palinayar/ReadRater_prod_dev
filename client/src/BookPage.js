@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   AppBar,
   Button,
@@ -20,6 +20,7 @@ import {
   Routes,
 } from "react-router-dom";
 import readService from "./service.js";
+import { UserContext } from "./context.js";
 
 function Copyright() {
   return (
@@ -40,6 +41,8 @@ const appBarHeight = "70px";
 
 export default function BookPage() {
   const [books, setBooks] = useState([]);
+  const { user, setUser } = useContext(UserContext);
+
   // const [rating, setRating] = useState();
   //This is how you fetch the data from the database, use in components
   useEffect(() => {
@@ -93,14 +96,16 @@ export default function BookPage() {
             ReadRater
           </Typography>
           <Box style={{ flexGrow: "1" }}></Box>
-          <Button
-            variant="contained"
-            color="success"
-            style={{ BackgroundColor: "#2F5F2E" }}
-            onClick={() => navigate("login")}
-          >
-            Login
-          </Button>
+          {user ? null : (
+            <Button
+              variant="contained"
+              color="success"
+              style={{ BackgroundColor: "#2F5F2E" }}
+              onClick={() => navigate("login")}
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <main>
@@ -147,7 +152,11 @@ export default function BookPage() {
         </Box>
         <Container sx={{ py: 4 }} maxWidth="md">
           {/* End hero unit */}
-          <Grid container spacing={4} style={{marginTop:"0px", marginBottom:"0px", width:"auto"}}>
+          <Grid
+            container
+            spacing={4}
+            style={{ marginTop: "0px", marginBottom: "0px", width: "auto" }}
+          >
             {books.map((book) => (
               <Grid item key={book.bok_id} xs={10} sm={4} md={3}>
                 <Book
@@ -158,6 +167,7 @@ export default function BookPage() {
                   picture={book.bilde}
                   avg_rating={book.avg_verdi}
                   bookID={book.bok_id}
+                  rateEnabled={true}
                 ></Book>
                 {/* #TODO Her kom å legge til infoen fra hver bok */}
               </Grid>
