@@ -57,6 +57,15 @@ export default function BookPage() {
   }, []);
 
   const navigate = useNavigate();
+
+  const addBook = () => {
+    if (user) {
+      navigate("add-new-book");
+    } else {
+      alert("You have to log in to add book!");
+      navigate("login");
+    }
+  };
   return (
     <>
       <CssBaseline />
@@ -143,7 +152,7 @@ export default function BookPage() {
                 color: "#2F5F2E",
                 borderColor: "#2F5F2E",
               }}
-              onClick={() => navigate("add-new-book")}
+              onClick={addBook}
             >
               Add book
             </Button>{" "}
