@@ -122,6 +122,7 @@ export default function BookPage() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              paddingTop: 50
             }}
           >
             <Typography
@@ -155,7 +156,7 @@ export default function BookPage() {
           <Grid
             container
             spacing={4}
-            style={{ marginTop: "0px", marginBottom: "0px", width: "auto" }}
+            style={{ marginTop: "30px", marginBottom: "0px", width: "auto" }}
           >
             {books.map((book) => (
               <Grid item key={book.bok_id} xs={10} sm={4} md={3}>
