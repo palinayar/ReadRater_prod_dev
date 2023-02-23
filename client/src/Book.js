@@ -31,6 +31,7 @@ export default function Book({
   picture,
   avg_rating,
   bookID,
+  rateEnabled,
 }) {
   const { user, setUser } = React.useContext(UserContext);
   var [rateState, setRateState] = React.useState(0); // 0:= Standard, 1:= Rating form, 2:= Feedback box
@@ -124,10 +125,11 @@ export default function Book({
           <Grid item style={{}}>
             <Button
               size="small"
-              variant="text"
+              variant={rateEnabled ? ("text") : ("outlined")}
               color="success"
               style={{ color: "#2F5F2E", textAlign: "center" }}
               onClick={handleClicked}
+              disabled={!rateEnabled}
             >
               {rateState === 2 ? "ok" : "Rate"}
             </Button>
@@ -137,7 +139,7 @@ export default function Book({
               readOnly
               precision={0.1}
               name="simple-controlled"
-              value={value} //Denne verdien må huskes per bruker
+              value={rateEnabled ? value : avg_rating} //Denne verdien må huskes per bruker
               onChange={(event, newValue) => {
                 setValue(newValue);
               }}

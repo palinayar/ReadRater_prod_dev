@@ -5,10 +5,12 @@ import {
     Button,
     Box,
     Typography,
-    Container
+    Container,
 } from "@material-ui/core";
 import bookIcon from "./images/book-icon.png";
-
+import Book from "./Book.js";
+import { Rating } from "@mui/material";
+import readService from "./service.js";
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -44,18 +46,33 @@ export default function Login() {
     const classes = useStyles();
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
+    const [year, setYear] = useState("");
     const [genre, setGenre] = useState("");
+    const [picture, setPicture] = useState("");
+    const [inpValue, setInpValue] = useState(3);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(`Title: ${title}, Author: ${author}, Genre: ${genre}`);
+        readService.addBook(author,title,genre,picture,year,inpValue,1)
         // You would typically make a network call here to authenticate the user
     };
 
     return (
         <ThemeProvider theme={theme}>
             <div style={{ marginTop: "50px" }}>
-                <Container component="main" maxWidth="xs" style={{ position: 'relative', right: '100px' }}>
+                <Container component="main" maxWidth="xs" style={{position:"relative"}}>
+                    <Box style={{position:"absolute", left:"-220px", top:"50%",transform:"translateY(-50%)",width:"200px",maxWidth:"200px"}}>
+                        <Book 
+                            title={title}
+                            author={author}
+                            year={year}
+                            genre={genre}
+                            picture={picture}
+                            avg_rating={inpValue}
+                            rateEnabled={false}
+                       />
+                    </Box>
                     <Box mt={5}>
                         <Typography component="h1" variant="h5">
                             Add a new book to our collection!
@@ -80,9 +97,19 @@ export default function Login() {
                                 name="author"
                                 label="Author"
                                 id="author"
-                                autoComplete="current-password"
                                 value={author}
                                 onChange={e => setAuthor(e.target.value)}
+                            />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="year"
+                                label="Year"
+                                id="year"
+                                value={year}
+                                onChange={e => setYear(e.target.value)}
                             />
                             <TextField
                                 variant="outlined"
@@ -95,6 +122,26 @@ export default function Login() {
                                 value={genre}
                                 onChange={e => setGenre(e.target.value)}
                             />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="picture"
+                                label="Picture"
+                                id="pircture"
+                                value={picture}
+                                onChange={e => setPicture(e.target.value)}
+                            />
+                            <Box style={{display:"flex",justifyContent:"space-around",padding:"20px"}}>
+                                <Rating 
+                                size="large" 
+                                value={inpValue} 
+                                onChange={(event,newValue) => {
+                                    if (newValue){setInpValue(newValue)} /*Not allowed to set value NULL*/ 
+                                }} 
+                                />
+                            </Box>
                             <Button
                                 type="submit"
                                 fullWidth
