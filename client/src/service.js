@@ -24,7 +24,7 @@ class ReadService {
       .then((response) => response.data);
   }
 
-  addBook(navn, tittel, sjanger, bilde, aar) {
+  addBook(navn, tittel, sjanger, bilde, aar, rangering, bruker_id) {
     return axios
       .post("/books", {
         navn: navn,
@@ -32,6 +32,8 @@ class ReadService {
         sjanger: sjanger,
         bilde: bilde,
         aar: aar,
+        rangering: rangering,
+        bruker_id: bruker_id,
       })
       .then((response) => response.data);
   }
