@@ -103,7 +103,7 @@ class ReadRaterService {
 const readRaterService = new ReadRaterService();
 
 //API router
-// henter alle bøkene inkl. gjennomsnittelig rating
+// henter alle bøkene inkl. gjennomsnittelig rating.
 app.get("/api/books", (_request, response) => {
   readRaterService
     .getAllBooks()
