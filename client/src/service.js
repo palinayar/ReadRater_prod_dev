@@ -21,7 +21,7 @@ class ReadService {
 
   logIn(brukernavn, passord) {
     return axios
-      .post("/log_in/" + brukernavn + "/" + passord)
+      .get("/log_in/" + brukernavn + "/" + passord)
       .then((response) => response.data);
   }
 }
