@@ -54,6 +54,7 @@ export default function Login() {
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(`Title: ${title}, Author: ${author}, Genre: ${genre}`);
+        readService.addBook(author,title,genre,picture,year,inpValue,1)
         // You would typically make a network call here to authenticate the user
     };
 
