@@ -15,13 +15,24 @@ class ReadService {
         bruker_id: bruker_id,
         bok_id: bok_id,
       })
-      .then((response) => response.data)
-      .catch((error) => console.log(error));
+      .then((response) => response.data);
   }
 
   logIn(brukernavn, passord) {
     return axios
       .get("/log_in/" + brukernavn + "/" + passord)
+      .then((response) => response.data);
+  }
+
+  addBook(navn, tittel, sjanger, bilde, aar) {
+    return axios
+      .post("/books", {
+        navn: navn,
+        tittel: tittel,
+        sjanger: sjanger,
+        bilde: bilde,
+        aar: aar,
+      })
       .then((response) => response.data);
   }
 }
