@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 
 app.use(cors());
+app.use(express.json());
 
 //Database connection setup
 const mysql = require("mysql2");
@@ -30,7 +31,39 @@ class ReadRaterService {
     return new Promise((resolve, reject) => {
       //henter ut id, tittel, sjanger og navn på forfatter
       connection.query(
-        "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Forfatter.navn FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id",
+        "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Bok.bilde, Bok.aar, Forfatter.navn, AVG(Rangering.verdi) as avg_verdi" +
+          " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
+          " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id",
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
+  addRating(verdi, vurdering, bok_id, bruker_id) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "INSERT INTO Rangering (verdi, vurdering, bok_id, bruker_id) VALUES (?,?,?,?)",
+        [verdi, vurdering, bok_id, bruker_id],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
+  //prøve put i stedet slik at man kun trenger en funksjon
+
+  addBook() {}
+
+  logIn(brukernavn, passord) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT bruker_id, brukernavn, passord FROM Bruker WHERE brukernavn=? AND passord=?",
+        [brukernavn, passord],
         (error, results) => {
           if (error) return reject(error);
 
@@ -44,6 +77,7 @@ class ReadRaterService {
 const readRaterService = new ReadRaterService();
 
 //API router
+// henter alle bøkene inkl. gjennomsnittelig rating
 app.get("/api/books", (_request, response) => {
   readRaterService
     .getAllBooks()
@@ -51,14 +85,31 @@ app.get("/api/books", (_request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
-//This is how you fetch the data from the database, use in components
-// useEffect(() => {
-//   readService
-//     .getAllBooks()
-//     .then((books) => {
-//       console.log(books);
-//     })
-//     .catch((error) => {
-//       console.log(error.message);
-//     });
-// }, []);
+// logger inn en bruker med gitt brukernavn og passord
+app.get("/api/log_in/:brukernavn/:passord", (request, response) => {
+  const brukernavn = request.params.brukernavn;
+  const passord = request.params.passord;
+  if (brukernavn.length != 0 && passord.length != 0) {
+    readRaterService
+      .logIn(brukernavn, passord)
+      .then((rows) => response.send(rows))
+      .catch((error) => response.status(500).send(error));
+  } else {
+    response.status(400).send("Missing properties");
+  }
+});
+
+app.post("/api/rating", (request, response) => {
+  const data = request.body;
+  if (
+    data.hasOwnProperty("verdi") &&
+    data.hasOwnProperty("vurdering") &&
+    data.hasOwnProperty("bruker_id") &&
+    data.hasOwnProperty("bok_id")
+  )
+    readRaterService
+      .addRating(data.verdi, data.vurdering, data.bok_id, data.bruker_id)
+      .then(() => response.send("Rating added"))
+      .catch((error) => response.status(500).send(error));
+  else response.status(400).send("Missing properties");
+});
