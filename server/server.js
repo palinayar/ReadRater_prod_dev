@@ -64,7 +64,7 @@ class ReadRaterService {
         (error, results) => {
           if (error) return reject(error);
 
-          resolve(results);
+          resolve(results.insertId);
         }
       );
     });
@@ -149,14 +149,25 @@ app.post("/api/books", (request, response) => {
     data.hasOwnProperty("tittel") &&
     data.hasOwnProperty("sjanger") &&
     data.hasOwnProperty("bilde") &&
-    data.hasOwnProperty("aar")
+    data.hasOwnProperty("aar") &&
+    data.hasOwnProperty("rangering") &&
+    data.hasOwnProperty("bruker_id")
   )
     readRaterService
       .addAuthor(data.navn)
-      .then((id) => {
+      .then((author_id) => {
         readRaterService
-          .addBook(data.tittel, data.sjanger, data.bilde, data.aar, id)
-          .then(() => response.send("Book and author added"))
+          .addBook(data.tittel, data.sjanger, data.bilde, data.aar, author_id)
+          .then((book_id) => {
+            readRaterService
+              .addRating(
+                data.rangering,
+                "Tom vurdering",
+                book_id,
+                data.bruker_id
+              )
+              .then(() => response.send("Book added with author and rating"));
+          })
           .catch((error) => response.send(error));
       })
       .catch((error) => response.status(500).send(error));
