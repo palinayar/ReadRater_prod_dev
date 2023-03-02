@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  ThemeProvider,
+  createTheme,
+} from "@material-ui/core/styles";
+import {
   AppBar,
   Button,
   CssBaseline,
@@ -56,6 +60,20 @@ export default function BookPage() {
       });
   }, []);
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#2f5f2e",
+      },
+      secondary: {
+        main: "#ffffff",
+      },
+    },
+    typography: {
+      fontFamily: "Bookman Old Style",
+    },
+  });
+
   const navigate = useNavigate();
 
   const addBook = () => {
@@ -68,137 +86,132 @@ export default function BookPage() {
   };
   return (
     <>
-      <CssBaseline />
-      <AppBar
-        position="relative"
-        style={{ height: appBarHeight, backgroundColor: "#2F5F2E" }}
-      >
-        <Toolbar style={{ display: "flex" }}>
-          <Box
-            style={{
-              height: appBarHeight,
-              width: appBarHeight,
-              display: "flex",
-              alignContent: "center",
-              justifyContent: "center",
-            }}
-          >
-            <img
-              src={bookIconW}
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppBar
+          position="relative"
+          style={{ height: appBarHeight, backgroundColor: "#2F5F2E" }}
+        >
+          <Toolbar style={{ display: "flex" }}>
+            <Box
               style={{
                 height: appBarHeight,
-                position: "relative",
-                boxSizing: "borderbox",
-                padding: "10px",
+                width: appBarHeight,
+                display: "flex",
+                alignContent: "center",
+                justifyContent: "center",
               }}
-            />
-          </Box>
-          <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
-            <Typography
-              style={{
-                fontFamily: "futura, helvetica, arial, sans-serif",
-                fontSize: "26px",
-              }}
-              variant="h6"
-              noWrap
             >
-              ReadRater
-            </Typography>
-          </a>
-          <Box style={{ flexGrow: "1" }}></Box>
-          {user ? null : (
-            <Button
-              variant="contained"
-              color="success"
-              style={{ BackgroundColor: "#2F5F2E" }}
-              onClick={() => navigate("login")}
-            >
-              Login
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-      <main>
-        {/* Hero unit */}
-        <Box
-          sx={{
-            bgcolor: "background.paper",
-            pt: 6,
-            pb: 0,
-          }}
-        >
-          <Container
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              paddingTop: 50,
+              <img
+                src={bookIconW}
+                style={{
+                  height: appBarHeight,
+                  position: "relative",
+                  boxSizing: "borderbox",
+                  padding: "10px",
+                }}
+              />
+            </Box>
+            <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
+              <Typography
+                fontSize="26px"
+                variant="h6"
+                noWrap
+              >
+                ReadRater
+              </Typography>
+            </a>
+            <Box style={{ flexGrow: "1" }}></Box>
+            {user ? null : (
+              <Button
+                variant="contained"
+                color="success"
+                style={{ BackgroundColor: "#2F5F2E" }}
+                onClick={() => navigate("login")}
+              >
+                Login
+              </Button>
+            )}
+          </Toolbar>
+        </AppBar>
+        <main>
+          {/* Hero unit */}
+          <Box
+            sx={{
+              bgcolor: "background.paper",
+              pt: 6,
+              pb: 0,
             }}
           >
-            <Typography
-              style={{ marginBottom: "30px" }}
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom
-            >
-              Welcome to ReadRater!
-            </Typography>
-            <Button
-              variant="outlined"
-              color="success"
+            <Container
               style={{
-                display: "inline-block",
-                width: "150px",
-                color: "#2F5F2E",
-                borderColor: "#2F5F2E",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                paddingTop: 50,
               }}
-              onClick={addBook}
             >
-              Add book
-            </Button>{" "}
-            {/*#TODO Hvis bruker er logget inn: link til addbook-side. Om nei, til login-side */}
+              <Typography
+                style={{ marginBottom: "30px" }}
+                component="h1"
+                variant="h2"
+                align="center"
+                color="text.primary"
+                gutterBottom
+              >
+                Welcome to ReadRater!
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                display="inline-block"
+                width="150px"
+                onClick={addBook}
+              >
+                Add book
+              </Button>{" "}
+              {/*#TODO Hvis bruker er logget inn: link til addbook-side. Om nei, til login-side */}
+            </Container>
+          </Box>
+          <Container sx={{ py: 4 }} maxWidth="md">
+            {/* End hero unit */}
+            <Grid
+              container
+              spacing={4}
+              style={{ marginTop: "30px", marginBottom: "0px", width: "auto" }}
+            >
+              {books.map((book) => (
+                <Grid item key={book.bok_id} xs={10} sm={4} md={3}>
+                  <Book
+                    title={book.tittel}
+                    author={book.navn}
+                    year={book.aar}
+                    genre={book.sjanger}
+                    picture={book.bilde}
+                    avg_rating={book.avg_verdi}
+                    bookID={book.bok_id}
+                    rateEnabled={true}
+                  ></Book>
+                  {/* #TODO Her kom å legge til infoen fra hver bok */}
+                </Grid>
+              ))}
+            </Grid>
           </Container>
-        </Box>
-        <Container sx={{ py: 4 }} maxWidth="md">
-          {/* End hero unit */}
-          <Grid
-            container
-            spacing={4}
-            style={{ marginTop: "30px", marginBottom: "0px", width: "auto" }}
+        </main>
+        {/* Footer */}
+        <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+          <Typography variant="h6" align="center" gutterBottom></Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="text.secondary"
+            component="p"
           >
-            {books.map((book) => (
-              <Grid item key={book.bok_id} xs={10} sm={4} md={3}>
-                <Book
-                  title={book.tittel}
-                  author={book.navn}
-                  year={book.aar}
-                  genre={book.sjanger}
-                  picture={book.bilde}
-                  avg_rating={book.avg_verdi}
-                  bookID={book.bok_id}
-                  rateEnabled={true}
-                ></Book>
-                {/* #TODO Her kom å legge til infoen fra hver bok */}
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom></Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          ReadRater: The application for rating books!
-        </Typography>
-        <Copyright />
-      </Box>
+            ReadRater: The application for rating books!
+          </Typography>
+          <Copyright />
+        </Box>
+      </ThemeProvider>
       {/* End footer */}
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState , useContext } from "react";
+import React, { useState, useContext } from "react";
 import { ThemeProvider, createTheme, makeStyles } from "@material-ui/core/styles";
 import {
     TextField,
@@ -33,7 +33,7 @@ const theme = createTheme({
         },
     },
     typography: {
-        fontFamily: "book antiqua",
+        fontFamily: "Bookman Old Style",
     },
 });
 
@@ -57,7 +57,7 @@ export default function Login() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        readService.addBook(author,title,genre,picture,year,inpValue,user.bruker_id).then((response) => {
+        readService.addBook(author, title, genre, picture, year, inpValue, user.bruker_id).then((response) => {
             navigate("/")
             console.log(response)
         }).catch((error) => console.log(error))
@@ -70,9 +70,9 @@ export default function Login() {
     return (
         <ThemeProvider theme={theme}>
             <div style={{ marginTop: "50px" }}>
-                <Container component="main" maxWidth="xs" style={{position:"relative"}}>
-                    <Box style={{position:"absolute", left:"-220px", top:"50%",transform:"translateY(-50%)",width:"200px",maxWidth:"200px"}}>
-                        <Book 
+                <Container component="main" maxWidth="xs" style={{ position: "relative" }}>
+                    <Box style={{ position: "absolute", left: "-220px", top: "50%", transform: "translateY(-50%)", width: "200px", maxWidth: "200px" }}>
+                        <Book
                             title={title}
                             author={author}
                             year={year}
@@ -80,7 +80,7 @@ export default function Login() {
                             picture={picture}
                             avg_rating={inpValue}
                             rateEnabled={false}
-                       />
+                        />
                     </Box>
                     <Box mt={5}>
                         <Typography component="h1" variant="h5">
@@ -142,13 +142,13 @@ export default function Login() {
                                 value={picture}
                                 onChange={e => setPicture(e.target.value)}
                             />
-                            <Box style={{display:"flex",justifyContent:"space-around",padding:"20px"}}>
-                                <Rating 
-                                size="large" 
-                                value={inpValue} 
-                                onChange={(event,newValue) => {
-                                    if (newValue){setInpValue(newValue)} /*Not allowed to set value NULL*/ 
-                                }} 
+                            <Box style={{ display: "flex", justifyContent: "space-around", padding: "20px" }}>
+                                <Rating
+                                    size="large"
+                                    value={inpValue}
+                                    onChange={(event, newValue) => {
+                                        if (newValue) { setInpValue(newValue) } /*Not allowed to set value NULL*/
+                                    }}
                                 />
                             </Box>
                             <Button
