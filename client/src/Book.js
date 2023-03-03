@@ -52,12 +52,18 @@ export default function Book({
       if (rateState === 0) {
         setRateState(1);
         setValue(avg_rating);
-      } else if (rateState === 1) {
-        setRateState(2);
-      } else {
+      } else if (rateState === 2) {
         setRateState(0);
+      } else {
+        console.log("something's wrong, I can feel it. rateState= "+rateState);
       }
     }
+  };
+
+  const handleClickOff = (e) => {
+    if (e.target.id === "rateBackdrop") {
+      setRateState(0);
+    } 
   };
 
   const handleSubmitRating = () => {
@@ -69,16 +75,6 @@ export default function Book({
       .catch((error) => console.log(error));
   };
 
-  window.addEventListener("click", function (e) {
-    // Click off the submit rating page
-    if (
-      rateState === 1 &&
-      !document.getElementById("rateForm").contains(e.target) &&
-      document.getElementById("rateBackdrop").contains(e.target)
-    ) {
-      setRateState(0);
-    }
-  });
 
   const theme = createTheme({
     palette: {
@@ -164,99 +160,101 @@ export default function Book({
               />
             </Grid>
 
-            {rateState === 1 ? ( // This Block changes: nothing / rate window / feedback box
-              <Box
-                id="rateBackdrop"
-                style={{
-                  position: "fixed",
-                  zIndex: "1101",
-                  width: "100%",
-                  height: "100%",
-                  top: "0px",
-                  left: "0px",
+            
+            <Box
+              id="rateBackdrop"
+              style={{
+                position: "fixed",
+                zIndex: "1101",
+                width: "100%",
+                height: "100%",
+                top: "0px",
+                left: "0px",
 
-                  backgroundColor: "rgba(240,240,240,0.8)",
+                backgroundColor: "rgba(240,240,240,0.8)",
+
+                display: rateState === 1 ? "block" : "none" ,
+              }}
+              onClick={(e) => {handleClickOff(e);}}
+            >
+              <Box
+                id="rateForm"
+                style={{
+                  width: "400px",
+                  // height:"600px",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%,-50%)",
+                  backgroundColor: "white",
+                  borderRadius: "20px",
+                  boxShadow: "0px 2px 15px 2px #aaa",
+
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "30px",
+                  alignItems: "stretch",
                 }}
               >
-                <Box
-                  id="rateForm"
+                <Typography
                   style={{
-                    width: "400px",
-                    // height:"600px",
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%,-50%)",
-                    backgroundColor: "white",
-                    borderRadius: "20px",
-                    boxShadow: "0px 2px 15px 2px #aaa",
-
-                    display: "flex",
-                    flexDirection: "column",
-                    padding: "30px",
-                    alignItems: "stretch",
+                    fontSize: "30px",
+                    textAlign: "center",
+                    fontWeight: "bold",
                   }}
                 >
-                  <Typography
-                    style={{
-                      fontSize: "30px",
-                      textAlign: "center",
-                      fontWeight: "bold",
+                  Give your rating of:
+                </Typography>
+                <Typography
+                  style={{
+                    fontSize: "30px",
+                    textAlign: "center",
+                    paddingBottom: "20px",
+                  }}
+                >
+                  {title}
+                </Typography>
+                <TextField
+                  id="inpTextField"
+                  label="What did you think?"
+                  variant="filled"
+                  multiline
+                  minRows="8"
+                  maxRows="8"
+                  onChange={(event) => setText(event.currentTarget.value)}
+                  style={{}}
+                />
+                <Box
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    padding: "20px",
+                  }}
+                >
+                  <Rating
+                    size="large"
+                    value={inpValue}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setInpValue(event.currentTarget.value);
+                      } /*Not allowed to set value NULL*/
                     }}
-                  >
-                    Give your rating of:
-                  </Typography>
-                  <Typography
-                    style={{
-                      fontSize: "30px",
-                      textAlign: "center",
-                      paddingBottom: "20px",
-                    }}
-                  >
-                    {title}
-                  </Typography>
-                  <TextField
-                    id="inpTextField"
-                    label="What did you think?"
-                    variant="filled"
-                    multiline
-                    minRows="8"
-                    maxRows="8"
-                    onChange={(event) => setText(event.currentTarget.value)}
-                    style={{}}
                   />
-                  <Box
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      padding: "20px",
-                    }}
-                  >
-                    <Rating
-                      size="large"
-                      value={inpValue}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setInpValue(event.currentTarget.value);
-                        } /*Not allowed to set value NULL*/
-                      }}
-                    />
-                  </Box>
-                  <Box style={{ flexGrow: "1" }}></Box>
-                  <Button
-                    onClick={handleSubmitRating}
-                    type="submit"
-                    variant="contained"
-                  >
-                    Submit Rating
-                  </Button>
                 </Box>
+                <Box style={{ flexGrow: "1" }}></Box>
+                <Button
+                  onClick={handleSubmitRating}
+                  type="submit"
+                  variant="contained"
+                >
+                  Submit Rating
+                </Button>
               </Box>
-            ) : rateState === 2 ? (
-              <Alert severity="success">Thanks for rating this book!</Alert>
-            ) : (
-              <Grid></Grid>
-            )}
+            </Box>
+
+            <Alert severity="success" style={{display: rateState===2 ? "flex" : "none"}}>Thanks for rating this book!</Alert>
+
+
           </Grid>
         </CardActions>
       </Card>
