@@ -32,8 +32,8 @@ class ReadRaterService {
       //henter ut id, tittel, sjanger og navn på forfatter
       connection.query(
         "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Bok.bilde, Bok.aar, Forfatter.navn, AVG(Rangering.verdi) as avg_verdi" +
-          " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
-          " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
+        " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
+        " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
         (error, results) => {
           if (error) return reject(error);
 
@@ -94,6 +94,23 @@ class ReadRaterService {
           if (results.length == 0) return reject("Wrong username or password");
 
           resolve(results[0]);
+        }
+      );
+    });
+  }
+
+  searchBooks(searchTerm) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Bok.bilde, Bok.aar, Forfatter.navn, AVG(Rangering.verdi) as avg_verdi" +
+        " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
+        " ON Bok.bok_id = Rangering.bok_id WHERE Bok.tittel LIKE ? OR Forfatter.navn LIKE ?" +
+        " GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
+        ["%" + searchTerm + "%", "%" + searchTerm + "%"],
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
         }
       );
     });

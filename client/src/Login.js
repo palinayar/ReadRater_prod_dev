@@ -124,7 +124,7 @@ export default function Login() {
               >
                 Sign In
               </Button>
-              {/* <Button
+              <Button
                 type="submit"
                 name="admin-button"
                 fullWidth
@@ -134,7 +134,7 @@ export default function Login() {
                 style={{ color: "#2f5f2e" }}
               >
                 Sign In As Admin
-              </Button> */}
+              </Button>
             </form>
           </Box>
           <img src={image} alt="ReadRater Logo" style={imagestyle} />
