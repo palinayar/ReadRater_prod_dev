@@ -13,6 +13,7 @@ import {
   Typography,
   Container,
   Link,
+  TextField,
 } from "@material-ui/core";
 import Book from "./Book.js";
 import bookIconW from "./images/book-icon_white.png";
@@ -46,6 +47,8 @@ const appBarHeight = "70px";
 export default function BookPage() {
   const [books, setBooks] = useState([]);
   const { user, setUser } = useContext(UserContext);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   // const [rating, setRating] = useState();
   //This is how you fetch the data from the database, use in components
@@ -84,6 +87,33 @@ export default function BookPage() {
       navigate("login");
     }
   };
+
+  const filterSearchedBooks = books.filter((book) => {
+    if (searchTerm) {
+      return (
+        book.tittel.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.navn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.sjanger.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.aar === searchTerm
+      );
+    } else {
+      return books;
+    }
+  });
+
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    readService
+      .searchBooks(searchTerm)
+      .then((data) => {
+        setSearchResults(data);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -135,6 +165,13 @@ export default function BookPage() {
           </Toolbar>
         </AppBar>
         <main>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            label="Search for books"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.currentTarget.value)}
+          />
           {/* Hero unit */}
           <Box
             sx={{
@@ -180,7 +217,7 @@ export default function BookPage() {
               spacing={4}
               style={{ marginTop: "30px", marginBottom: "0px", width: "auto" }}
             >
-              {books.map((book) => (
+              {filterSearchedBooks.map((book) => (
                 <Grid item key={book.bok_id} xs={10} sm={4} md={3}>
                   <Book
                     title={book.tittel}
@@ -214,5 +251,5 @@ export default function BookPage() {
       </ThemeProvider>
       {/* End footer */}
     </>
-  );
-}
+  )
+};
