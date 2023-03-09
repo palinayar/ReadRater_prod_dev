@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  ThemeProvider,
-  createTheme,
-} from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 import {
   AppBar,
   Button,
@@ -13,6 +10,11 @@ import {
   Typography,
   Container,
   Link,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  ListSubheader,
   TextField,
 } from "@material-ui/core";
 import Book from "./Book.js";
@@ -49,6 +51,8 @@ export default function BookPage() {
   const { user, setUser } = useContext(UserContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [filterValue, setFilterValue] = useState();
+  const [filteredBooks, setFilteredBooks] = useState([]);
 
   // const [rating, setRating] = useState();
   //This is how you fetch the data from the database, use in components
@@ -57,6 +61,7 @@ export default function BookPage() {
       .getAllBooks()
       .then((data) => {
         setBooks(data);
+        setFilteredBooks(data);
       })
       .catch((error) => {
         console.log(error.message);
@@ -88,7 +93,30 @@ export default function BookPage() {
     }
   };
 
-  const filterSearchedBooks = books.filter((book) => {
+  const handleFilter = (event) => {
+    setFilterValue(event.target.value);
+  };
+
+  const addFilter = () => {
+    let newArray = [];
+    return books.filter((book) => {
+      if (book.navn == filterValue) {
+        newArray.push(book);
+      }
+      if (book.sjanger == filterValue) {
+        newArray.push(book);
+      }
+      if (book.aar == filterValue) {
+        newArray.push(book);
+      }
+      if (filterValue == "NONE") {
+        newArray = books;
+      }
+      setFilteredBooks(newArray);
+    });
+  };
+
+  const filterSearchedBooks = filteredBooks.filter((book) => {
     if (searchTerm) {
       return (
         book.tittel.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,22 +125,9 @@ export default function BookPage() {
         book.aar === searchTerm
       );
     } else {
-      return books;
+      return filteredBooks;
     }
   });
-
-
-  const handleSearch = (event) => {
-    event.preventDefault();
-    readService
-      .searchBooks(searchTerm)
-      .then((data) => {
-        setSearchResults(data);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
 
   return (
     <>
@@ -143,11 +158,7 @@ export default function BookPage() {
               />
             </Box>
             <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
-              <Typography
-                fontSize="26px"
-                variant="h6"
-                noWrap
-              >
+              <Typography fontSize="26px" variant="h6" noWrap>
                 ReadRater
               </Typography>
             </a>
@@ -210,6 +221,36 @@ export default function BookPage() {
               {/*#TODO Hvis bruker er logget inn: link til addbook-side. Om nei, til login-side */}
             </Container>
           </Box>
+          <Container maxWidth="md">
+            <FormControl>
+              <InputLabel>Filter</InputLabel>
+              <Select
+                label="Filter"
+                value={filterValue}
+                style={{ width: "200px" }}
+                onChange={handleFilter}
+              >
+                <MenuItem value="NONE">
+                  <em>No filter</em>
+                </MenuItem>
+                <ListSubheader>Author</ListSubheader>
+                {books.map((book) => (
+                  <MenuItem value={book.navn}>{book.navn}</MenuItem>
+                ))}
+                <ListSubheader>Genre</ListSubheader>
+                {books.map((book) => (
+                  <MenuItem value={book.sjanger}>{book.sjanger}</MenuItem>
+                ))}
+                <ListSubheader>Year</ListSubheader>
+                {books.map((book) => (
+                  <MenuItem value={book.aar}>{book.aar}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Button onClick={addFilter}>Add filter</Button>
+          </Container>
+
           <Container sx={{ py: 4 }} maxWidth="md">
             {/* End hero unit */}
             <Grid
@@ -251,5 +292,5 @@ export default function BookPage() {
       </ThemeProvider>
       {/* End footer */}
     </>
-  )
-};
+  );
+}
