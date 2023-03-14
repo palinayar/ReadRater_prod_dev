@@ -7,6 +7,18 @@ class ReadService {
     return axios.get("/books").then((response) => response.data);
   }
 
+  getDistinctAuthors() {
+    return axios.get("/authors").then((response) => response.data);
+  }
+
+  getDistinctGenres() {
+    return axios.get("/genres").then((response) => response.data);
+  }
+
+  getDistinctYears() {
+    return axios.get("/years").then((response) => response.data);
+  }
+
   addRating(verdi, vurdering, bruker_id, bok_id) {
     return axios
       .post("/rating", {

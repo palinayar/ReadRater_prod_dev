@@ -32,8 +32,8 @@ class ReadRaterService {
       //henter ut id, tittel, sjanger og navn på forfatter
       connection.query(
         "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Bok.bilde, Bok.aar, Forfatter.navn, AVG(Rangering.verdi) as avg_verdi" +
-        " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
-        " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
+          " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
+          " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
         (error, results) => {
           if (error) return reject(error);
 
@@ -84,6 +84,45 @@ class ReadRaterService {
     });
   }
 
+  getDistinctAuthors() {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT DISTINCT navn FROM Forfatter ORDER BY navn",
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  getDistinctGenres() {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT DISTINCT sjanger FROM Bok ORDER BY sjanger",
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  getDistinctYears() {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT DISTINCT aar FROM Bok ORDER by aar DESC",
+        (error, results) => {
+          if (error) return reject(error);
+
+          resolve(results);
+        }
+      );
+    });
+  }
+
   logIn(brukernavn, passord) {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -103,9 +142,9 @@ class ReadRaterService {
     return new Promise((resolve, reject) => {
       connection.query(
         "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Bok.bilde, Bok.aar, Forfatter.navn, AVG(Rangering.verdi) as avg_verdi" +
-        " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
-        " ON Bok.bok_id = Rangering.bok_id WHERE Bok.tittel LIKE ? OR Forfatter.navn LIKE ?" +
-        " GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
+          " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
+          " ON Bok.bok_id = Rangering.bok_id WHERE Bok.tittel LIKE ? OR Forfatter.navn LIKE ?" +
+          " GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
         ["%" + searchTerm + "%", "%" + searchTerm + "%"],
         (error, results) => {
           if (error) return reject(error);
@@ -156,6 +195,29 @@ app.post("/api/rating", (request, response) => {
       .then(() => response.send("Rating added"))
       .catch((error) => response.status(500).send(error));
   else response.status(400).send("Missing properties");
+});
+
+//henter alle unike fofatternavn
+app.get("/api/authors", (_request, response) => {
+  readRaterService
+    .getDistinctAuthors()
+    .then((rows) => response.send(rows))
+    .catch((error) => response.status(500).send(error));
+});
+
+//henter alle unike sjangere
+app.get("/api/genres", (_request, response) => {
+  readRaterService
+    .getDistinctGenres()
+    .then((rows) => response.send(rows))
+    .catch((error) => response.status(500).send(error));
+});
+
+app.get("/api/years", (_request, response) => {
+  readRaterService
+    .getDistinctYears()
+    .then((rows) => response.send(rows))
+    .catch((error) => response.status(500).send(error));
 });
 
 //legger til en bok
