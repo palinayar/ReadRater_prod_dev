@@ -53,6 +53,9 @@ export default function BookPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterValue, setFilterValue] = useState();
   const [filteredBooks, setFilteredBooks] = useState([]);
+  const [distinctAuthors, setDistinctAuthors] = useState([]);
+  const [distinctGenres, setDistinctGenres] = useState([]);
+  const [distinctYears, setDistinctYears] = useState([]);
 
   // const [rating, setRating] = useState();
   //This is how you fetch the data from the database, use in components
@@ -62,6 +65,30 @@ export default function BookPage() {
       .then((data) => {
         setBooks(data);
         setFilteredBooks(data);
+        readService
+          .getDistinctAuthors()
+          .then((data) => {
+            setDistinctAuthors(data);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+        readService
+          .getDistinctGenres()
+          .then((data) => {
+            setDistinctGenres(data);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+        readService
+          .getDistinctYears()
+          .then((data) => {
+            setDistinctYears(data);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
       })
       .catch((error) => {
         console.log(error.message);
@@ -133,7 +160,6 @@ export default function BookPage() {
     }
   });
 
-
   return (
     <>
       <div style={pageStyle}>
@@ -184,8 +210,7 @@ export default function BookPage() {
           </AppBar>
           <main>
             {/* Hero unit */}
-            <Box
-            >
+            <Box>
               <Container
                 style={{
                   display: "flex",
@@ -216,8 +241,7 @@ export default function BookPage() {
                 {/*#TODO Hvis bruker er logget inn: link til addbook-side. Om nei, til login-side */}
               </Container>
             </Box>
-            <Box
-            >
+            <Box>
               <Container maxWidth="md">
                 <FormControl>
                   <InputLabel>Filter</InputLabel>
@@ -231,30 +255,32 @@ export default function BookPage() {
                       <em>No filter</em>
                     </MenuItem>
                     <ListSubheader>Author</ListSubheader>
-                    {books.map((book) => (
-                      <MenuItem value={book.navn}>{book.navn}</MenuItem>
+                    {distinctAuthors.map((author) => (
+                      <MenuItem value={author.navn}>{author.navn}</MenuItem>
                     ))}
                     <ListSubheader>Genre</ListSubheader>
-                    {books.map((book) => (
-                      <MenuItem value={book.sjanger}>{book.sjanger}</MenuItem>
+                    {distinctGenres.map((genre) => (
+                      <MenuItem value={genre.sjanger}>{genre.sjanger}</MenuItem>
                     ))}
                     <ListSubheader>Year</ListSubheader>
-                    {books.map((book) => (
-                      <MenuItem value={book.aar}>{book.aar}</MenuItem>
+                    {distinctYears.map((year) => (
+                      <MenuItem value={year.aar}>{year.aar}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
-
                 <Button
                   variant="text"
                   color="secondary"
                   width="150px"
-                  style={{ color: "#2f5f2e", marginTop: "25px", marginLeft: "5px" }}
+                  style={{
+                    color: "#2f5f2e",
+                    marginTop: "25px",
+                    marginLeft: "5px",
+                  }}
                   onClick={addFilter}
                 >
                   Add filter
                 </Button>{" "}
-
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -266,14 +292,17 @@ export default function BookPage() {
                 />
               </Container>
             </Box>
-            <Box
-            >
+            <Box>
               <Container sx={{ py: 4 }} maxWidth="md">
                 {/* End hero unit */}
                 <Grid
                   container
                   spacing={4}
-                  style={{ marginTop: "30px", marginBottom: "0px", width: "auto" }}
+                  style={{
+                    marginTop: "30px",
+                    marginBottom: "0px",
+                    width: "auto",
+                  }}
                 >
                   {filterSearchedBooks.map((book) => (
                     <Grid item key={book.bok_id} xs={10} sm={4} md={3}>
