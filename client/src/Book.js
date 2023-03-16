@@ -1,8 +1,5 @@
 import * as React from "react";
-import {
-  ThemeProvider,
-  createTheme,
-} from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 import {
   Button,
   Card,
@@ -13,6 +10,7 @@ import {
   Box,
   Typography,
   TextField,
+  CssBaseline,
 } from "@material-ui/core";
 import { Rating, Alert } from "@mui/material";
 
@@ -80,22 +78,9 @@ export default function Book({
     }
   });
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#2f5f2e",
-      },
-      secondary: {
-        main: "#ffffff",
-      },
-    },
-    typography: {
-      fontFamily: "Bookman Old Style",
-    },
-  });
-
   return (
-    <ThemeProvider theme={theme}>
+    <>
+      <CssBaseline />
       <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
         <Box style={{}}>
           <CardMedia
@@ -143,9 +128,8 @@ export default function Book({
             <Grid item style={{}}>
               <Button
                 size="small"
-                variant={rateEnabled ? "text" : "outlined"}
-                color="success"
-                style={{ color: "#2F5F2E", textAlign: "center" }}
+                variant="contained"
+                color="primary"
                 onClick={handleClicked}
                 disabled={!rateEnabled}
               >
@@ -187,7 +171,7 @@ export default function Book({
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%,-50%)",
-                    backgroundColor: "white",
+                    backgroundColor: "grey",
                     borderRadius: "20px",
                     boxShadow: "0px 2px 15px 2px #aaa",
 
@@ -260,6 +244,6 @@ export default function Book({
           </Grid>
         </CardActions>
       </Card>
-    </ThemeProvider>
+    </>
   );
 }
