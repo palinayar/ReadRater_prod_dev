@@ -15,7 +15,7 @@ import { modalClasses } from "@mui/material";
 
 export const App = () => {
   const [user, setUser] = useState(false);
-  const [mode, setMode] = useState(lightTheme);
+  const [mode, setMode] = useState(darkTheme);
   //trenger en context med enten true eller false
   //den bestemmer theme
 

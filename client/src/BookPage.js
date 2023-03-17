@@ -52,7 +52,7 @@ export default function BookPage() {
   const [distinctAuthors, setDistinctAuthors] = useState([]);
   const [distinctGenres, setDistinctGenres] = useState([]);
   const [distinctYears, setDistinctYears] = useState([]);
-  const [switchValue, setSwitchValue] = useState(false);
+  const [switchValue, setSwitchValue] = useState(true);
 
   // const [rating, setRating] = useState();
   //This is how you fetch the data from the database, use in components
