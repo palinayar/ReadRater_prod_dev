@@ -33,7 +33,7 @@ class ReadRaterService {
       connection.query(
         "SELECT Bok.bok_id, Bok.tittel, Bok.sjanger, Bok.bilde, Bok.aar, Forfatter.navn, AVG(Rangering.verdi) as avg_verdi" +
           " FROM Bok JOIN Forfatter ON Forfatter.forfatter_id = Bok.forfatter_id JOIN Rangering" +
-          " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id ORDER BY avg_verdi DESC",
+          " ON Bok.bok_id = Rangering.bok_id GROUP BY Bok.bok_id ORDER BY avg_verdi DESC, Bok.tittel ASC",
         (error, results) => {
           if (error) return reject(error);
 
@@ -87,13 +87,42 @@ class ReadRaterService {
   logIn(brukernavn, passord) {
     return new Promise((resolve, reject) => {
       connection.query(
-        "SELECT bruker_id, brukernavn, passord FROM Bruker WHERE brukernavn=? AND passord=?",
+        "SELECT bruker_id, brukernavn, passord, isAdmin FROM Bruker WHERE brukernavn=? AND passord=?",
         [brukernavn, passord],
         (error, results) => {
           if (error) return reject(error);
           if (results.length == 0) return reject("Wrong username or password");
 
           resolve(results[0]);
+        }
+      );
+    });
+  }
+
+  getAllRatings(bokID) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT R.rangering_id, R.verdi, R.vurdering, B.brukernavn "+
+        "FROM Rangering AS R JOIN Bruker AS B ON R.bruker_id = B.bruker_id "+
+        "WHERE R.bok_id=? "+
+        "ORDER BY R.rangering_id ASC",
+        [parseInt(bokID)],
+        (error, results) => {
+          if (error) return reject(error);
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  deleteRating(ratingID) {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "DELETE FROM Rangering WHERE Rangering.rangering_id=?",
+        [parseInt(ratingID)],
+        (error, results) => {
+          if (error) return reject(error);
+          resolve(results);
         }
       );
     });
@@ -125,6 +154,19 @@ app.get("/api/log_in/:brukernavn/:passord", (request, response) => {
   }
 });
 
+//henter alle vurderinger for en gitt bok
+app.get("/api/ratings/:bokID", (request, response) => {
+  const bokID = request.params.bokID;
+  if (bokID.length != 0) {
+    readRaterService
+      .getAllRatings(bokID)
+      .then((rows) => response.send(rows))
+      .catch((error) => response.status(500).send(error));
+  } else {
+    response.status(400).send("Missing properties");
+  }
+});
+
 //legger til rating på en gitt bok med en gitt bruker_id
 app.post("/api/rating", (request, response) => {
   const data = request.body;
@@ -139,6 +181,17 @@ app.post("/api/rating", (request, response) => {
       .then(() => response.send("Rating added"))
       .catch((error) => response.status(500).send(error));
   else response.status(400).send("Missing properties");
+});
+
+//sletter rangeringen med gitt id fra systemet
+app.delete("/api/delRating/:ratingID", (request, response) => {
+  const ratingID = request.params.ratingID;
+  if (ratingID.length != 0) {
+    readRaterService
+      .deleteRating(ratingID)
+      .then(() => response.send("Rating deleted"))
+      .catch((error) => response.status(500).send(error));
+  } else response.status(400).send("Missing properties");
 });
 
 //legger til en bok
