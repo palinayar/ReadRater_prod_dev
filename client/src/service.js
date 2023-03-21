@@ -49,6 +49,14 @@ class ReadService {
       })
       .then((response) => response.data);
   }
+
+  getAllRatings(bokID) {
+    return axios.get("/ratings/" + bokID).then((response) => response.data);
+  }
+
+  deleteRating(ratingID) {
+    return axios.delete("/delRating/" + ratingID).then((response) => response.data);
+  }
 }
 
 const readService = new ReadService();

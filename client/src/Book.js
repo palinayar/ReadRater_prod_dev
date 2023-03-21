@@ -18,12 +18,7 @@ import readService from "./service.js";
 import { UserContext } from "./context.js";
 import { useNavigate } from "react-router";
 
-// const ratingStyle = {
-//   fontSize: "16px",
-//   fontWeight: "bold",
-//   textAlign: "right",
-//   paddingRight: "5px",
-// };
+import RatingCard from "./RatingCard.js";
 
 export default function Book({
   title,
@@ -36,53 +31,71 @@ export default function Book({
   rateEnabled,
 }) {
   const { user, setUser } = React.useContext(UserContext);
-  var [rateState, setRateState] = React.useState(0); // 0:= Standard, 1:= Rating form, 2:= Feedback box
   const [value, setValue] = React.useState(avg_rating); // Her må value være gjennomsnittlig rating hentet fra backend
   const [inpValue, setInpValue] = React.useState(3);
   const [text, setText] = React.useState("");
+  const [showRateForm, setShowRateForm] = React.useState(false);
+  const [showFeedback, setShowFeedback] = React.useState(false);
+  const [showRatings, setShowRatings] = React.useState(false);
+  const [ratingsData, setRatingsData] = React.useState([]);
   const navigate = useNavigate();
 
-  const handleClicked = () => {
-    if (!user) {
-      alert("You have to log in to give your rating!");
-      navigate("login");
+  const handleClickRate = () => {
+    if (showFeedback) {
+      setShowFeedback(false);
     } else {
-      if (rateState === 0) {
-        setRateState(1);
-        setValue(avg_rating);
-      } else if (rateState === 1) {
-        setRateState(2);
+      if (!user) {
+        alert("You have to log in to give your rating!");
+        navigate("login");
       } else {
-        setRateState(0);
+        setShowRateForm(true);
       }
     }
   };
-
-  const handleSubmitRating = () => {
-    setRateState(2);
+  const handleSubmitRateForm = () => {
+    setShowRateForm(false);
+    setShowFeedback(true);
     setValue(inpValue);
     readService
       .addRating(inpValue, text, user.bruker_id, bookID)
       .then((response) => console.log(response))
       .catch((error) => console.log(error));
   };
+  const handleOpenRatings = () => {
+    setShowRatings(true);
+    loadRatingsData();
+  };
+  const handleClickOff = (e) => {
+    if (e.target.id === "rateBackdrop") {
+      setShowRateForm(false);
+      setShowRatings(false);
+    } 
+  };
 
-  window.addEventListener("click", function (e) {
-    // Click off the submit rating page
-    if (
-      rateState === 1 &&
-      !document.getElementById("rateForm").contains(e.target) &&
-      document.getElementById("rateBackdrop").contains(e.target)
-    ) {
-      setRateState(0);
-    }
-  });
+  const loadRatingsData = () => {
+    readService
+      .getAllRatings(bookID)
+      .then((data) => {
+        setRatingsData(data);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
 
   return (
     <>
       <CssBaseline />
-      <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-        <Box style={{}}>
+      <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }} className="hoverShadow">
+        <Box 
+          style={{}}
+          onClick={()=>{
+            if (rateEnabled) {
+              handleOpenRatings();
+            }
+          }}
+        >
           <CardMedia
             component="img"
             style={{
@@ -115,7 +128,6 @@ export default function Book({
         </CardContent>
         <CardActions style={{ display: "flex", flexWrap: "wrap" }}>
           <Box style={{ flexGrow: "1" }}></Box>
-          {/* <Box style={ratingStyle}>{ratingValue}/10 ★</Box> */}
           <Grid
             container
             style={{
@@ -128,15 +140,27 @@ export default function Book({
             <Grid item style={{}}>
               <Button
                 size="small"
-                variant="contained"
+
+                variant={rateEnabled ? "text" : "contained"}
                 color="primary"
-                onClick={handleClicked}
+                style={{ color: "#2F5F2E", textAlign: "center" }}
+                onClick={handleClickRate}
+
                 disabled={!rateEnabled}
               >
-                {rateState === 2 ? "ok" : "Rate"}
+                {showFeedback ? "Ok" : "Rate"}
               </Button>
             </Grid>
-            <Grid item style={{ display: "flex", alignItems: "center" }}>
+            <Grid
+             item 
+             className={rateEnabled ? "rateHover" : ""}
+             onClick={()=>{
+              if (rateEnabled) {
+                handleOpenRatings();
+              }
+             }}
+             style={{ display: "flex", alignItems: "center" }}
+            >
               <Rating
                 readOnly
                 precision={0.1}
@@ -147,102 +171,138 @@ export default function Book({
                 }}
               />
             </Grid>
-
-            {rateState === 1 ? ( // This Block changes: nothing / rate window / feedback box
-              <Box
-                id="rateBackdrop"
-                style={{
-                  position: "fixed",
-                  zIndex: "1101",
-                  width: "100%",
-                  height: "100%",
-                  top: "0px",
-                  left: "0px",
-
-                  backgroundColor: "rgba(240,240,240,0.8)",
-                }}
-              >
-                <Box
-                  id="rateForm"
-                  style={{
-                    width: "400px",
-                    // height:"600px",
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%,-50%)",
-                    backgroundColor: "grey",
-                    borderRadius: "20px",
-                    boxShadow: "0px 2px 15px 2px #aaa",
-
-                    display: "flex",
-                    flexDirection: "column",
-                    padding: "30px",
-                    alignItems: "stretch",
-                  }}
-                >
-                  <Typography
-                    style={{
-                      fontSize: "30px",
-                      textAlign: "center",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Give your rating of:
-                  </Typography>
-                  <Typography
-                    style={{
-                      fontSize: "30px",
-                      textAlign: "center",
-                      paddingBottom: "20px",
-                    }}
-                  >
-                    {title}
-                  </Typography>
-                  <TextField
-                    id="inpTextField"
-                    label="What did you think?"
-                    variant="filled"
-                    multiline
-                    minRows="8"
-                    maxRows="8"
-                    onChange={(event) => setText(event.currentTarget.value)}
-                    style={{}}
-                  />
-                  <Box
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      padding: "20px",
-                    }}
-                  >
-                    <Rating
-                      size="large"
-                      value={inpValue}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setInpValue(event.currentTarget.value);
-                        } /*Not allowed to set value NULL*/
-                      }}
-                    />
-                  </Box>
-                  <Box style={{ flexGrow: "1" }}></Box>
-                  <Button
-                    onClick={handleSubmitRating}
-                    type="submit"
-                    variant="contained"
-                  >
-                    Submit Rating
-                  </Button>
-                </Box>
-              </Box>
-            ) : rateState === 2 ? (
-              <Alert severity="success">Thanks for rating this book!</Alert>
-            ) : (
-              <Grid></Grid>
-            )}
           </Grid>
         </CardActions>
+
+
+        <Box
+          id="rateBackdrop"
+          style={{
+            position: "fixed",
+            zIndex: "1101",
+            width: "100%",
+            height: "100%",
+            top: "0px",
+            left: "0px",
+
+            backgroundColor: "rgba(240,240,240,0.8)",
+
+            display: showRateForm || showRatings ? "block" : "none",
+          }}
+          onClick={(e) => {handleClickOff(e);}}
+        >
+          <Box
+            id="rateForm"
+            className="centerBox"
+            style={{
+              width: "400px",
+              display: showRateForm ? "flex" : "none",
+            }}
+          >
+            <Typography
+              style={{
+                fontSize: "30px",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              Give your rating of:
+            </Typography>
+            <Typography
+              style={{
+                fontSize: "30px",
+                textAlign: "center",
+                paddingBottom: "20px",
+              }}
+            >
+              {title}
+            </Typography>
+            <TextField
+              id="inpTextField"
+              label="What did you think?"
+              variant="filled"
+              multiline
+              minRows="8"
+              maxRows="8"
+              onChange={(event) => setText(event.currentTarget.value)}
+              style={{}}
+            />
+            <Box
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                padding: "20px",
+              }}
+            >
+              <Rating
+                size="large"
+                value={inpValue}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    setInpValue(event.currentTarget.value);
+                  } /*Not allowed to set value NULL*/
+                }}
+              />
+            </Box>
+            <Box style={{ flexGrow: "1" }}></Box>
+            <Button
+              onClick={handleSubmitRateForm}
+              type="submit"
+              variant="contained"
+            >
+              Submit Rating
+            </Button>
+          </Box>
+          <Box
+            id="ratings"
+            className="centerBox"
+            style={{
+              width: "600px",
+              display: showRatings ? "flex" : "none",
+              
+            }}
+          >
+            <Typography
+              style={{
+                fontSize: "30px",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              See the ratings of:
+            </Typography>
+            <Typography
+              style={{
+                fontSize: "30px",
+                textAlign: "center",
+                paddingBottom: "20px",
+              }}
+            >
+              {title}
+            </Typography>
+            <Grid
+              container
+              spacing={4}
+              style={{ marginTop: "0px", width: "auto" , overflowY: "scroll"}}
+            >
+              {ratingsData.map((item) => (
+                <Grid item key={item.rangering_id} xs={12} sm={12} md={12}>
+                  <RatingCard
+                    username={item.brukernavn}
+                    text={item.vurdering}
+                    value={item.verdi}
+                    ratingID={item.rangering_id}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+
+          </Box>
+        </Box>
+
+        <Alert severity="success" style={{display: showFeedback ? "flex" : "none"}}>Thanks for rating this book!</Alert>
+
+
       </Card>
     </>
   );
