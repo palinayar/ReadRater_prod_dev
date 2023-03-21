@@ -143,7 +143,7 @@ export default function Book({
 
                 variant={rateEnabled ? "contained" : "outlined"}
                 color="primary"
-                style={{ color: "#2F5F2E", textAlign: "center" }}
+                style={{ textAlign: "center" }}
                 onClick={handleClickRate}
 
                 disabled={!rateEnabled}
@@ -185,7 +185,7 @@ export default function Book({
             top: "0px",
             left: "0px",
 
-            backgroundColor: "rgba(240,240,240,0.8)",
+            backgroundColor: "rgba(200,200,200,0.8)",
 
             display: showRateForm || showRatings ? "block" : "none",
           }}

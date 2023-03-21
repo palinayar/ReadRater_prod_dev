@@ -52,7 +52,6 @@ export default function RatingCard({
   });
 
   return (
-    <ThemeProvider theme={theme}>
       <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }} className="hoverShadow">
         <CardContent sx={{ flexGrow: 1, py: "0px" }}>
           <Typography
@@ -91,6 +90,5 @@ export default function RatingCard({
           </Button>
         </CardContent>
       </Card>
-    </ThemeProvider>
   );
 } // #TODO Gjør ferdig ratingCard, implementer med db,
