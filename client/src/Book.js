@@ -141,7 +141,7 @@ export default function Book({
               <Button
                 size="small"
 
-                variant={rateEnabled ? "text" : "contained"}
+                variant={rateEnabled ? "contained" : "outlined"}
                 color="primary"
                 style={{ color: "#2F5F2E", textAlign: "center" }}
                 onClick={handleClickRate}
