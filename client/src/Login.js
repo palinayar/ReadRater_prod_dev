@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const imagestyle = {
   position: "absolute",
-  top: "10px",
+  top: "100px",
   right: "-160px",
 };
 
@@ -62,14 +62,14 @@ export default function Login() {
   };
 
   return (
-    <div style={{ marginTop: "50px" }}>
+    <div style={{ backgroundColor: "#011707", height: "100vh" }}>
       <Container
         component="main"
         maxWidth="xs"
-        style={{ position: "relative", right: "100px" }}
+        style={{ position: "relative", right: "100px", paddingTop: "100px" }}
       >
         <Box mt={5}>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" style={{ color: "white" }}>
             Login
           </Typography>
           <form className={classes.form} onSubmit={handleSubmit}>

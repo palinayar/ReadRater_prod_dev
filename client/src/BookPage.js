@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 import {
   AppBar,
   Button,
@@ -21,7 +20,7 @@ import {
 import Book from "./Book.js";
 import bookIconW from "./images/book-icon_white.png";
 import { useNavigate } from "react-router-dom";
-import { testTheme, darkTheme, lightTheme } from "./theme.js";
+import { darkTheme, lightTheme } from "./theme.js";
 import readService from "./service.js";
 import { ThemeContext, UserContext } from "./context.js";
 
@@ -90,7 +89,7 @@ export default function BookPage() {
       .catch((error) => {
         console.log(error.message);
       });
-  }, []);
+  }, [switchValue]);
 
   const navigate = useNavigate();
 
