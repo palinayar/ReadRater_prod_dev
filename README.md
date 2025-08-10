@@ -1,82 +1,108 @@
-# Getting Started with Create React App
+# ReadRater
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ReadRater is a web application for book lovers to discover, rate, and review books. The platform allows users to browse a collection of books, filter and search by author, genre, or year, and add new books to the collection. Users can also rate books and view average ratings.
 
-## Available Scripts
+## Features
 
-First of all, you can start the client:
+- **Browse Books:** View a list of books with details such as title, author, year, genre, cover image, and average rating.
+- **Search & Filter:** Search for books by title, author, genre, or year. Filter the book list using dropdown menus.
+- **Add Books:** Logged-in users can add new books to the collection.
+- **User Authentication:** Login functionality to restrict certain actions (like adding books) to authenticated users.
+- **Theme Switcher:** Toggle between light and dark mode for a personalized experience.
+- **Responsive Design:** Clean and modern UI built with Material-UI, optimized for various devices.
 
-## 'cd client'
+## Project Structure
 
-## `npm install`
+```
+client/
+  ├── public/
+  └── src/
+      ├── AddBooks.js
+      ├── App.js
+      ├── Book.js
+      ├── BookPage.js
+      ├── context.js
+      ├── Login.js
+      ├── RatingCard.js
+      ├── service.js
+      ├── theme.js
+      └── images/
+server/
+  └── server.js
+db-script.txt
+ER-diagram-RR.png
+README.md
+```
 
-### `npm start`
+- **client/**: React frontend application.
+- **server/**: Backend server (Node.js/Express).
+- **db-script.txt**: Database schema or setup script.
+- **ER-diagram-RR.png**: Entity-Relationship diagram for the database.
 
-Then start the server:
+## Getting Started
 
-## `cd server`
+### Prerequisites
 
-## `npm install`
+- Node.js (v14+ recommended)
+- npm
 
-## `npm run dev`
+### Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. **Clone the repository:**
+   ```sh
+   git clone <repository-url>
+   cd pu-team-36
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. **Install dependencies:**
+   - For the server:
+     ```sh
+     cd server
+     npm install
+     ```
+   - For the client:
+     ```sh
+     cd ../client
+     npm install
+     ```
 
-### `npm test`
+3. **Set up the database:**
+   - Use the `db-script.txt` to create and populate your database.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. **Start the server:**
+   ```sh
+   cd ../server
+   npm start
+   ```
 
-### `npm run build`
+5. **Start the client:**
+   ```sh
+   cd ../client
+   npm start
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+6. **Open the app:**
+   - Visit `http://localhost:3000` in your browser.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Browse and search for books** on the main page.
+- **Filter** by author, genre, or year using the dropdown.
+- **Add a new book** by logging in and clicking the "Add book" button.
+- **Switch between light and dark mode** using the toggle in the header.
 
-### `npm run eject`
+## Technologies Used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- React
+- Material-UI
+- Node.js
+- Express
+- (Database: see `db-script.txt` and ER diagram)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contributing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## License
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[MIT](LICENSE)
